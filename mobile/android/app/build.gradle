@@ -1,0 +1,75 @@
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
+    // Uncomment + drop google-services.json in place to enable FCM (TASK-051):
+    // id "com.google.gms.google-services"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader("UTF-8") { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "1"
+def flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0"
+
+android {
+    namespace = "in.gov.mausam.nextgen"
+    compileSdk = 34
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    defaultConfig {
+        applicationId = "in.gov.mausam.nextgen"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
+    }
+
+    // TASK-077: R8 code shrinking + resource shrinking + ABI splits for the
+    // <18 MB release APK on 2 GB RAM devices.
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.debug // pitch APKs are debug-signed
+            minifyEnabled = true
+            shrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
+    splits {
+        abi {
+            enable = true
+            reset()
+            include "arm64-v8a", "armeabi-v7a"
+            universalApk = false
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+dependencies {
+    // TASK-051: FCM data messages + expedited WorkManager (Doze-safe alert).
+    implementation "com.google.firebase:firebase-messaging:24.0.0"
+    implementation "androidx.work:work-runtime-ktx:2.9.1"
+    // TASK-076: home-screen glance widget (RemoteViews-based, no extra lib).
+    implementation "androidx.core:core-ktx:1.13.1"
+}

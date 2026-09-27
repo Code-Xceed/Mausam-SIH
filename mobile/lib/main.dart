@@ -1,7 +1,19 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
+import 'package:http/http.dart' as http;
 
+import 'audio/suno_mausam.dart';
 import 'data/favorites_repository.dart';
+import 'l10n/language_sheet.dart';
+import 'l10n/language_store.dart';
+import 'map/mausam_map_screen.dart';
+import 'ml/inspector_sheet.dart';
+import 'push/home_widget_service.dart';
+import 'safety/lifeline_screen.dart';
+import 'safety/ndma_checklists.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/persona_switcher_sheet.dart';
 import 'screens/search_screen.dart';
@@ -9,8 +21,10 @@ import 'search/gazetteer.dart';
 import 'sdui/sdui_models.dart';
 import 'sdui/sdui_registry.dart';
 import 'sdui/sdui_repository.dart';
+import 'state/a11y_settings.dart';
 import 'state/connectivity_observer.dart';
 import 'state/error_boundary.dart';
+import 'state/lifeline_mode.dart';
 import 'state/persona_store.dart';
 import 'storage/hive_manager.dart';
 
@@ -20,6 +34,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ErrorBoundary.install(); // zero-crash guarantee (TASK-030)
   await HiveManager.init(); // all boxes open before UI (TASK-027)
+  await A11yScope.load(); // TASK-066: text scale + high contrast prefs
   runApp(const MausamApp());
 }
 
@@ -28,19 +43,30 @@ class MausamApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Mausam Next-Gen',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorSchemeSeed: const Color(0xFF0B57D0),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        colorSchemeSeed: const Color(0xFF0B57D0),
-        brightness: Brightness.dark,
-        useMaterial3: true,
-      ),
-      home: const HomeGate(),
+    // TASK-066: ListenableBuilder re-applies a11y prefs live; the builder
+    // injects the text scaler, high contrast swaps the light theme.
+    return ListenableBuilder(
+      listenable: A11yScope.instance,
+      builder: (context, _) {
+        final light = ThemeData(
+          colorSchemeSeed: const Color(0xFF0B57D0),
+          useMaterial3: true,
+        );
+        return MaterialApp(
+          title: 'Mausam Next-Gen',
+          debugShowCheckedModeBanner: false,
+          theme: A11yScope.instance.highContrast
+              ? A11yScope.highContrastTheme(light)
+              : light,
+          darkTheme: ThemeData(
+            colorSchemeSeed: const Color(0xFF0B57D0),
+            brightness: Brightness.dark,
+            useMaterial3: true,
+          ),
+          builder: A11yScope.appBuilder,
+          home: const HomeGate(),
+        );
+      },
     );
   }
 }
@@ -112,6 +138,11 @@ class _HomeScreenState extends State<HomeScreen> {
   final _repo = SduiRepository();
   final _favorites = FavoritesRepository();
   final _connectivity = ConnectivityObserver();
+  final _lifeline = LifelineController();
+  final _langStore = LanguageStore();
+  bool _lifelineActive = false;
+  String _lang = 'en';
+  Map<String, dynamic>? _langBundle;
   SduiPayload? _payload;
   String? _error;
   (double, double)? _coords;
@@ -129,11 +160,30 @@ class _HomeScreenState extends State<HomeScreen> {
     _connectivity.stream.listen((s) {
       if (mounted) setState(() => _conn = s);
     });
+    // TASK-052: lifeline watcher — sees every payload this screen fetches,
+    // plus its own 60 s re-check between user refreshes.
+    _lifeline.addListener(_onLifelineChanged);
+    _lifeline.start(fetch: _fetchHomePayload);
     _bootstrap();
+  }
+
+  void _onLifelineChanged() {
+    if (!mounted) return;
+    if (_lifeline.active == _lifelineActive) return;
+    setState(() => _lifelineActive = _lifeline.active);
+  }
+
+  /// Fresh payload fetch for the lifeline watcher (same repo/cache paths,
+  /// so ETag/304 and offline-cache behavior stay identical to the homepage).
+  Future<SduiPayload?> _fetchHomePayload() async {
+    final coords = _coords;
+    if (coords == null) return null;
+    return _repo.loadHome(lat: coords.$1, lon: coords.$2, personas: _personas);
   }
 
   @override
   void dispose() {
+    _lifeline.dispose();
     _connectivity.dispose();
     super.dispose();
   }
@@ -141,6 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _bootstrap() async {
     // Warm the gazetteer in the background (search ready in <200ms).
     Gazetteer.instance.load();
+    _loadLanguage();
 
     var coords = await widget.store.loadLocation();
     coords ??= (28.6139, 77.2090);
@@ -174,6 +225,10 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       if (!mounted) return;
       setState(() => _payload = payload);
+      // TASK-052: feed the lifeline watcher the freshest payload.
+      unawaited(_lifeline.recordPayload(payload));
+      // TASK-076: update the home-screen widget snapshot.
+      _updateHomeWidget(payload);
     } catch (e) {
       if (!mounted) return;
       setState(() => _error = e.toString());
@@ -272,13 +327,117 @@ class _HomeScreenState extends State<HomeScreen> {
     await _load();
   }
 
+  /// TASK-076: extract temp/rain from the payload and push to the widget.
+  void _updateHomeWidget(SduiPayload payload) {
+    double? temp;
+    int rain = 0;
+    String? severity;
+    for (final w in payload.widgets) {
+      if (w.type == 'current_conditions') {
+        temp = (w.props['temperature_c'] as num?)?.toDouble();
+      } else if (w.type == 'event_planner_calendar') {
+        final days = w.props['days'] as List?;
+        if (days != null && days.isNotEmpty) {
+          rain = ((days.first as Map<String, dynamic>)['rain_pct'] as num?)?.toInt() ?? 0;
+        }
+      } else if (w.type == 'disaster_lifeline_card') {
+        severity = w.props['severity']?.toString();
+      }
+    }
+    if (temp != null) {
+      unawaited(HomeWidgetService.updateSnapshot(
+        place: _placeLabel,
+        tempC: temp,
+        rainPct: rain,
+        severity: severity,
+      ));
+    }
+  }
+
+  /// TASK-063: load the persisted language + its cached offline bundle.
+  Future<void> _loadLanguage() async {
+    final lang = await _langStore.load();
+    final bundle = await _langStore.loadBundle(lang);
+    if (!mounted) return;
+    setState(() { _lang = lang; _langBundle = bundle; });
+  }
+
+  /// TASK-063: switch language — instant re-render, bundle cached offline.
+  Future<void> _switchLanguage() async {
+    final chosen = await LanguageSheet.show(context, _lang);
+    if (chosen == null || chosen == _lang) return;
+    await _langStore.save(chosen);
+    var bundle = await _langStore.loadBundle(chosen);
+    if (bundle == null) {
+      try {
+        final res = await http
+            .get(Uri.parse('${_repo.baseUrl}/v1/i18n/strings/$chosen'))
+            .timeout(const Duration(seconds: 4));
+        if (res.statusCode == 200) {
+          bundle = jsonDecode(res.body) as Map<String, dynamic>;
+          await _langStore.saveBundle(chosen, bundle!);
+        }
+      } catch (_) {
+        // Offline: keep whatever bundle exists; strings fall back to English.
+      }
+    }
+    if (!mounted) return;
+    setState(() { _lang = chosen; _langBundle = bundle; });
+  }
+
+  String _localized(String key, String fallback) {
+    final strings = _langBundle?['strings'] as Map<String, dynamic>?;
+    return strings?[key]?.toString() ?? fallback;
+  }
+
+  /// TASK-064: speak the current conditions in the selected language.
+  Future<void> _speakBulletin() async {
+    final payload = _payload;
+    if (payload == null) return;
+    double? temp;
+    String conditionText = '';
+    for (final w in payload.widgets) {
+      if (w.type == 'current_conditions') {
+        temp = (w.props['temperature_c'] as num?)?.toDouble();
+        conditionText = w.props['condition_text']?.toString() ?? '';
+      }
+    }
+    final text = '${payload.displayName}. $conditionText. '
+        'Temperature ${temp?.round() ?? '--'} degrees.'
+        '${payload.stale ? ' Showing cached data.' : ''}';
+    final ok = await SunoMausam.instance.speak(text, lang: _lang);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(ok
+          ? 'Suno Mausam: playing advisory ($_lang)'
+          : 'TTS unavailable on this device'),
+      duration: const Duration(seconds: 2),
+    ));
+  }
+  Future<void> _stageDemoDisaster() async {
+    await _lifeline.triggerDemo(areaDesc: '$_placeLabel coastal belt');
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text('SIMULATED DRILL staged — Lifeline Mode engaged')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // TASK-052 UI hijack: an active Red alert REPLACES the weather feed.
+    if (_lifelineActive && _lifeline.alert != null) {
+      return LifelineScreen(
+        alert: _lifeline.alert!,
+        onAcknowledge: () => _lifeline.acknowledge(),
+      );
+    }
     final isFav = _favorites.isFavorite(_placeLabel, '');
     return Scaffold(
       appBar: AppBar(
         title: InkWell(
           onTap: _openSearch,
+          onLongPress: _stageDemoDisaster,
           borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
@@ -293,6 +452,31 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.translate),
+            tooltip: 'Language',
+            onPressed: _switchLanguage,
+          ),
+          IconButton(
+            icon: const Icon(Icons.map_outlined),
+            tooltip: 'Hazard map',
+            onPressed: () {
+              final coords = _coords;
+              if (coords == null) return;
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => MausamMapScreen(
+                  initialLat: coords.$1,
+                  initialLon: coords.$2,
+                  placeLabel: _placeLabel,
+                ),
+              ));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.health_and_safety_outlined),
+            tooltip: 'Disaster checklists (offline)',
+            onPressed: () => NdmaChecklistScreen.push(context),
+          ),
           IconButton(
             icon: Icon(
               isFav ? Icons.star_rounded : Icons.star_border_rounded,
@@ -310,6 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       drawer: _FavoritesDrawer(
         favorites: _favs,
+        onDemoDisaster: _stageDemoDisaster,
         onSelect: (f) async {
           Navigator.of(context).pop();
           await widget.store.saveLocation(f.lat, f.lon);
@@ -353,9 +538,24 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(child: _buildBody()),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _refresh,
-        child: const Icon(Icons.refresh),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // TASK-064: "Suno Mausam" — speaks the advisory in the chosen
+          // language; cached last bulletin replays offline (TASK-065).
+          FloatingActionButton.small(
+            heroTag: 'suno',
+            onPressed: _speakBulletin,
+            tooltip: 'Suno Mausam — listen',
+            child: const Icon(Icons.volume_up_outlined),
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            heroTag: 'refresh',
+            onPressed: _refresh,
+            child: const Icon(Icons.refresh),
+          ),
+        ],
       ),
     );
   }
@@ -435,11 +635,13 @@ class _FavoritesDrawer extends StatelessWidget {
   final List<FavoriteLocation> favorites;
   final ValueChanged<FavoriteLocation> onSelect;
   final ValueChanged<FavoriteLocation> onRemove;
+  final VoidCallback onDemoDisaster;
 
   const _FavoritesDrawer({
     required this.favorites,
     required this.onSelect,
     required this.onRemove,
+    required this.onDemoDisaster,
   });
 
   @override
@@ -481,7 +683,86 @@ class _FavoritesDrawer extends StatelessWidget {
                   },
                 ),
               ),
-          ],
+          const Divider(height: 1),
+          ListTile(
+            leading: const Icon(Icons.health_and_safety_outlined),
+            title: const Text('Disaster checklists'),
+            subtitle: const Text('NDMA steps — works offline'),
+            onTap: () {
+              Navigator.of(context).pop();
+              NdmaChecklistScreen.push(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.crisis_alert, color: Color(0xFFB71C1C)),
+            title: const Text('Stage demo Red Alert'),
+            subtitle: const Text('Jury demo — hijacks this screen'),
+            onTap: () {
+              Navigator.of(context).pop();
+              onDemoDisaster();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.insights_outlined),
+            title: const Text('Algorithm Inspector'),
+            subtitle: const Text('Live LinUCB context + arm scores'),
+            onTap: () {
+              Navigator.of(context).pop();
+              InspectorSheet.show(context, baseUrl: _repo.baseUrl);
+            },
+          ),
+          // TASK-066: accessibility toggles (elderly / low-vision users).
+          SwitchListTile(
+            secondary: const Icon(Icons.text_increase_outlined),
+            title: const Text('Large text'),
+            value: A11yScope.instance.textScale > 1.05,
+            onChanged: (v) =>
+                A11yScope.instance.setTextScale(v ? 1.3 : 1.0),
+          ),
+          SwitchListTile(
+            secondary: const Icon(Icons.contrast_outlined),
+            title: const Text('High contrast'),
+            value: A11yScope.instance.highContrast,
+            onChanged: (v) => A11yScope.instance.setHighContrast(v),
+          ),
+          const Divider(height: 1),
+          // TASK-072: DPDP "Clear My Footprint" — wipes ALL local Hive
+          // boxes (favorites, persona, telemetry, cached schema, lifeline).
+          ListTile(
+            leading: const Icon(Icons.delete_sweep_outlined),
+            title: const Text('Clear My Footprint'),
+            subtitle: const Text('Erase all on-device data (DPDP 2023)'),
+            onTap: () async {
+              Navigator.of(context).pop();
+              final confirmed = await showDialog<bool>(
+                context: context,
+                builder: (dialogCtx) => AlertDialog(
+                  title: const Text('Erase everything?'),
+                  content: const Text(
+                    'Favorites, personas, cached forecasts and alerts will be '
+                    'deleted from this device. A server-side purge is sent too.',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(dialogCtx).pop(false),
+                      child: const Text('Cancel'),
+                    ),
+                    FilledButton(
+                      onPressed: () => Navigator.of(dialogCtx).pop(true),
+                      child: const Text('Erase'),
+                    ),
+                  ],
+                ),
+              );
+              if (confirmed != true) return;
+              await HiveManager.purgeAll();
+              if (!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Footprint cleared — all local data erased'),
+              ));
+            },
+          ),
+        ],
         ),
       ),
     );

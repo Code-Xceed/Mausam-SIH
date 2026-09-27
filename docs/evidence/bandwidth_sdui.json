@@ -1,0 +1,5 @@
+{
+  "bytes": 2609,
+  "budget_bytes": 15360,
+  "compressed_ride": "GZip middleware on; client sends Accept-Encoding: br/gzip"
+}

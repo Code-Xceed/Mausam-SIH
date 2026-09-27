@@ -1,0 +1,23 @@
+{
+  "rounds": 3000,
+  "seed": 26076,
+  "dim": 20,
+  "arms": 9,
+  "results": {
+    "linucb": {
+      "cumulative_reward": 2539.0,
+      "reward_per_round": 0.8463,
+      "lift_vs_random_pct": 89.9
+    },
+    "epsilon": {
+      "cumulative_reward": 2505.0,
+      "reward_per_round": 0.835,
+      "lift_vs_random_pct": 87.4
+    },
+    "random": {
+      "cumulative_reward": 1337.0,
+      "reward_per_round": 0.4457,
+      "lift_vs_random_pct": 0.0
+    }
+  }
+}

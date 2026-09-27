@@ -1,0 +1,112 @@
+{
+  "version": "2026.09",
+  "source": "NDMA — National Disaster Management Authority preparedness guidance (public safety steps; bundled for fully offline access)",
+  "checklists": {
+    "cyclone": {
+      "title": "Cyclone",
+      "icon": "cyclone",
+      "before": [
+        "Assemble an emergency kit: torch, battery radio, spare batteries, first-aid, 3 days of drinking water and dry food.",
+        "Charge mobile phones and power banks fully; keep a power bank in your kit.",
+        "Secure loose objects on balconies and rooftops; trim dead branches near the house.",
+        "Locate your nearest cyclone shelter and the evacuation route to it.",
+        "Keep documents (ID, land records, insurance) in a waterproof bag.",
+        "Fishermen: do not venture into the sea while a cyclone warning is active."
+      ],
+      "during": [
+        "Stay indoors, away from doors and windows; shelter in the strongest room on the ground floor.",
+        "If coastal storm-surge evacuation is advised, move to the designated shelter immediately — do not wait.",
+        "Disconnect electrical appliances; do not touch wet switches.",
+        "Do NOT go outside during the sudden lull — that is the eye of the storm; winds return violently from the opposite direction.",
+        "Keep the radio on for official updates; ignore rumors."
+      ],
+      "after": [
+        "Stay inside until the official all-clear is issued.",
+        "Avoid floodwater, fallen power lines and damaged buildings.",
+        "Boil all drinking water; discard food touched by floodwater.",
+        "Report casualties and damage on 1078 (NDMA helpline) or 112.",
+        "Check on elderly, disabled and pregnant neighbours."
+      ]
+    },
+    "flood": {
+      "title": "Flood",
+      "icon": "flood",
+      "before": [
+        "Move medicines, documents and valuables to upper floors.",
+        "Know how to switch off electricity and gas at the mains — do it the moment water enters the house.",
+        "Stock drinking water, dry food and a torch with spare batteries.",
+        "Keep a rope, inflatable ring and plastic sheets ready.",
+        "Identify the highest reachable ground and the route to it."
+      ],
+      "during": [
+        "Move to higher ground immediately; do not wait for water to reach the door.",
+        "NEVER walk or drive through flowing water — 15 cm can sweep you off your feet, 60 cm can float a car.",
+        "Stay away from electric poles, transformers and submerged wiring.",
+        "If swept away, float on your back with feet pointing downstream.",
+        "Abandon belongings — life first."
+      ],
+      "after": [
+        "Do not return home until authorities declare it safe.",
+        "Boil or disinfect every drop of drinking water; wash all utensils.",
+        "Discard all food touched by floodwater.",
+        "Beware of snakes and insects sheltering indoors.",
+        "Report waterlogging and disease symptoms to the local authority."
+      ]
+    },
+    "heatwave": {
+      "title": "Heat Wave",
+      "icon": "heat",
+      "before": [
+        "Hydrate through the day — water, ORS, buttermilk, lemon water — even if not thirsty.",
+        "Avoid alcohol, tea and coffee during peak hours; they dehydrate.",
+        "Wear light-coloured, loose cotton clothes; use a wide-brim hat or umbrella outdoors.",
+        "Schedule outdoor work and travel before 11:00 or after 16:00.",
+        "Check on infants, the elderly and the chronically ill twice a day."
+      ],
+      "during": [
+        "Stay indoors between 12:00 and 16:00; keep curtains closed on sun-facing sides.",
+        "Cool the body: wet cloth on neck and wrists, cool baths, fans with cross-ventilation.",
+        "Sweating heavily? Drink ORS — plain water alone can dilute body salts.",
+        "Heat stroke signs: body temperature above 40°C, confusion, dry skin with NO sweating — cool aggressively (ice packs to armpits/groin) and call 108 immediately.",
+        "Never leave children or pets inside a parked vehicle."
+      ],
+      "after": [
+        "Rest in a cool place for at least 24 hours after severe heat exposure.",
+        "Continue steady hydration for the next two days.",
+        "Watch children and the elderly for delayed dehydration symptoms.",
+        "Re-check your heat plan before the next peak-heat day."
+      ]
+    },
+    "lightning": {
+      "title": "Lightning",
+      "icon": "lightning",
+      "before": [
+        "Track IMD thunderstorm alerts; plan field work and outdoor events around them.",
+        "Know the 30-30 rule: if thunder follows lightning within 30 seconds, go indoors — stay 30 minutes after the last thunder.",
+        "Identify safe shelters along your usual routes: buildings, hard-topped vehicles.",
+        "Teach children: 'When thunder roars, go indoors.'"
+      ],
+      "during": [
+        "Get inside a substantial building or a hard-topped metal vehicle; close the windows.",
+        "Once inside: stay away from windows, plumbing taps and wired electronics; unplug appliances.",
+        "Caught in the open? Crouch low on the balls of your feet, feet together, head down — do NOT lie flat.",
+        "Avoid tall isolated trees, poles, fences, metal rails and all water bodies.",
+        "Cattle and people are killed under trees — never shelter there."
+      ],
+      "after": [
+        "Lightning-strike victims carry NO electric charge — touch and help them immediately.",
+        "If the victim is unconscious and not breathing, start CPR and call 108.",
+        "Wait 30 minutes after the last thunder before resuming outdoor activity.",
+        "Check cattle and livestock in open fields."
+      ]
+    }
+  },
+  "emergency_numbers": [
+    { "label": "National Emergency", "number": "112" },
+    { "label": "NDMA Helpline", "number": "1078" },
+    { "label": "Ambulance", "number": "108" },
+    { "label": "Police", "number": "100" },
+    { "label": "Fire", "number": "101" },
+    { "label": "Cyclone (IMD)", "number": "1070" }
+  ]
+}

@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt jsonschema
+      - name: Full backend suite (unit + acceptance + evidence)
+        run: python -m pytest -q -p no:warnings
+      - name: TASK-046 replay evaluation artifact
+        run: |
+          python ../ml/replay_eval.py --rounds 2000
+          echo "## Bandit replay (TASK-046)" >> "$GITHUB_STEP_SUMMARY"
+          cat ../ml/replay_results.json >> "$GITHUB_STEP_SUMMARY"
+
+  schema-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install fastapi pydantic pydantic-settings brotli httpx numpy pytest jsonschema redis
+      - name: Live payload must validate against sdui_v1.schema.json
+        run: |
+          cd backend
+          python - <<'EOF'
+          import json
+          from fastapi.testclient import TestClient
+          from app.main import app
+          import jsonschema
+          schema = json.load(open('../contracts/sdui_v1.schema.json'))
+          with TestClient(app) as c:
+              payload = c.get('/v1/sdui/home', params={'lat':28.61,'lon':77.21}).json()
+          jsonschema.validate(payload, schema)
+          print('SDUI contract: PASS')
+          EOF
+
+  dart-static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Dart static soundness (balance, imports, assets)
+        run: python mobile/tool/sanity_check.py
+
+  flutter-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+        working-directory: mobile
+      - name: flutter analyze (informational on first run)
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings || true
+        working-directory: mobile
+      - name: flutter test (29+ mobile tests)
+        run: flutter test
+        working-directory: mobile

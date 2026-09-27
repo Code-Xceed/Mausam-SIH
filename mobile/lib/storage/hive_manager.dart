@@ -13,6 +13,7 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 ///   cached_schema_box  — last-good SDUI payload + ETag (repo uses directly)
 ///   persona_box        — onboarding persona tags + last location
 ///   telemetry_box      — offline telemetry queue (encrypted, Phase 5)
+///   lifeline_box       — TASK-052 staged demo-drill payload (auto-expiring)
 class HiveManager {
   static const _secure = FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
@@ -66,6 +67,7 @@ class HiveManager {
       'cached_schema_box',
       'persona_box',
       'telemetry_box',
+      'lifeline_box',
     ]) {
       if (Hive.isBoxOpen(name)) {
         await Hive.box<String>(name).clear();
