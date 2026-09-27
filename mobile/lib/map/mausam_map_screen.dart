@@ -299,7 +299,7 @@ class _MausamMapScreenState extends State<MausamMapScreen> {
             onPressed: _locateMe,
           ),
           IconButton(
-            icon: const Icon(Icons.offline_bolt_outlined),
+            icon: const Icon(Icons.offline_bolt),
             tooltip: 'Prefetch offline tiles',
             onPressed: _prefetchOfflineTiles,
           ),
@@ -309,7 +309,9 @@ class _MausamMapScreenState extends State<MausamMapScreen> {
         children: [
           Expanded(
             child: MapLibreMap(
-              styleString: MapLibreStyles.demo,
+              // Demo raster/vector style from MapLibre — direct URL avoids
+              // SDK-constant API drift across plugin versions.
+              styleString: 'https://demotiles.maplibre.org/style.json',
               initialCameraPosition: CameraPosition(
                 target: LatLng(widget.initialLat, widget.initialLon),
                 zoom: 9,

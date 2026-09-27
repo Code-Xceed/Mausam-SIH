@@ -46,7 +46,7 @@ class PermissionsHelper {
     final result = await showDialog<bool>(
       context: context,
       builder: (dialogCtx) => AlertDialog(
-        icon: const Icon(Icons.notifications_active_outlined),
+        icon: const Icon(Icons.notifications_active),
         title: const Text('Allow disaster alerts?'),
         content: Text(
           'Mausam sends official NDMA/IMD Red warnings for $place — cyclone, '

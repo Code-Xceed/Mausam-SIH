@@ -58,7 +58,7 @@ IconData conditionIcon(String condition) {
     case 'snow':
       return Icons.ac_unit_outlined;
     default:
-      return Icons.help_outline_outlined;
+      return Icons.help_outline;
   }
 }
 

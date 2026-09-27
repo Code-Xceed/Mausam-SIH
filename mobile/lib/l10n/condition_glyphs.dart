@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 /// Hindi or Tamil still reads ICONS — every condition/severity maps to a
 /// distinct shape+color pair, and each carries a semantic label for
 /// screen readers (TalkBack announces it, satisfying a11y audits).
+///
+/// Icon names are restricted to glyphs available in stable Material sets
+/// (CI compiles against flutter stable).
 class ConditionGlyphs {
   ConditionGlyphs._();
 
@@ -11,26 +14,26 @@ class ConditionGlyphs {
   static IconData glyphFor(String condition) {
     switch (condition) {
       case 'clear':
-        return Icons.wb_sunny_rounded;
+        return Icons.wb_sunny;
       case 'partly_cloudy':
-        return Icons.partly_cloudy_day_rounded;
+        return Icons.partly_cloudy_day;
       case 'cloudy':
-        return Icons.cloud_rounded;
+        return Icons.cloud;
       case 'fog':
       case 'haze':
-        return Icons.blur_on_rounded;
+        return Icons.foggy;
       case 'drizzle':
-        return Icons.grain_rounded;
+        return Icons.water_drop;
       case 'rain':
-        return Icons.umbrella_rounded;
+        return Icons.umbrella;
       case 'thunderstorm':
-        return Icons.bolt_rounded;
+        return Icons.bolt;
       case 'hail':
-        return Icons.ac_unit_rounded;
+        return Icons.grain;
       case 'snow':
-        return Icons.snowing_rounded;
+        return Icons.ac_unit;
       default:
-        return Icons.help_outline_rounded;
+        return Icons.help_outline;
     }
   }
 
@@ -39,13 +42,13 @@ class ConditionGlyphs {
   static (IconData, Color) severityGlyph(String severity) {
     switch (severity.toLowerCase()) {
       case 'extreme':
-        return (Icons.dangerous_rounded, const Color(0xFFB71C1C));
+        return (Icons.dangerous, const Color(0xFFB71C1C));
       case 'severe':
-        return (Icons.warning_rounded, const Color(0xFFE65100));
+        return (Icons.warning, const Color(0xFFE65100));
       case 'moderate':
-        return (Icons.info_rounded, const Color(0xFFF9A825));
+        return (Icons.info, const Color(0xFFF9A825));
       default:
-        return (Icons.info_outline_rounded, const Color(0xFF78909C));
+        return (Icons.info_outline, const Color(0xFF78909C));
     }
   }
 

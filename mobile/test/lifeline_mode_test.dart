@@ -250,15 +250,16 @@ void main() {
           calls += 1;
           return _payloadWithCard(_feedAlert());
         },
-        every: const Duration(milliseconds: 5),
+        every: const Duration(milliseconds: 10),
       );
-      await Future<void>.delayed(const Duration(milliseconds: 80));
+      // Generous windows: CI runners jitter hard on real timers.
+      await Future<void>.delayed(const Duration(milliseconds: 250));
       expect(calls, greaterThanOrEqualTo(1));
       expect(c.active, isTrue);
 
       final before = calls;
       c.dispose();
-      await Future<void>.delayed(const Duration(milliseconds: 40));
+      await Future<void>.delayed(const Duration(milliseconds: 120));
       expect(calls, before, reason: 'dispose must cancel the poll timer');
     });
 

@@ -81,12 +81,12 @@ class Gazetteer {
 
   /// Fuzzy search with typo tolerance. Returns top [limit] matches.
   List<Town> search(String query, {int limit = 8}) {
-    final q = query.trim().casefold();
+    final q = query.trim().toLowerCase();
     if (q.isEmpty || _towns.isEmpty) return const [];
-    final results = <(_ScoredTown)>[];
+    final results = <_ScoredTown>[];
 
     for (final t in _towns) {
-      final name = t.name.casefold();
+      final name = t.name.toLowerCase();
       var score = _matchScore(q, name);
       if (score <= 0) continue;
       // Prefer bigger towns on ties.

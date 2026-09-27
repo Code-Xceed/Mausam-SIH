@@ -458,7 +458,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: _switchLanguage,
           ),
           IconButton(
-            icon: const Icon(Icons.map_outlined),
+            icon: const Icon(Icons.map),
             tooltip: 'Hazard map',
             onPressed: () {
               final coords = _coords;
@@ -473,7 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.health_and_safety_outlined),
+            icon: const Icon(Icons.health_and_safety),
             tooltip: 'Disaster checklists (offline)',
             onPressed: () => NdmaChecklistScreen.push(context),
           ),
@@ -547,7 +547,7 @@ class _HomeScreenState extends State<HomeScreen> {
             heroTag: 'suno',
             onPressed: _speakBulletin,
             tooltip: 'Suno Mausam — listen',
-            child: const Icon(Icons.volume_up_outlined),
+            child: const Icon(Icons.volume_up),
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
@@ -685,7 +685,7 @@ class _FavoritesDrawer extends StatelessWidget {
               ),
           const Divider(height: 1),
           ListTile(
-            leading: const Icon(Icons.health_and_safety_outlined),
+            leading: const Icon(Icons.health_and_safety),
             title: const Text('Disaster checklists'),
             subtitle: const Text('NDMA steps — works offline'),
             onTap: () {
@@ -703,7 +703,7 @@ class _FavoritesDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.insights_outlined),
+            leading: const Icon(Icons.insights),
             title: const Text('Algorithm Inspector'),
             subtitle: const Text('Live LinUCB context + arm scores'),
             onTap: () {
@@ -713,14 +713,14 @@ class _FavoritesDrawer extends StatelessWidget {
           ),
           // TASK-066: accessibility toggles (elderly / low-vision users).
           SwitchListTile(
-            secondary: const Icon(Icons.text_increase_outlined),
+            secondary: const Icon(Icons.format_size),
             title: const Text('Large text'),
             value: A11yScope.instance.textScale > 1.05,
             onChanged: (v) =>
                 A11yScope.instance.setTextScale(v ? 1.3 : 1.0),
           ),
           SwitchListTile(
-            secondary: const Icon(Icons.contrast_outlined),
+            secondary: const Icon(Icons.contrast),
             title: const Text('High contrast'),
             value: A11yScope.instance.highContrast,
             onChanged: (v) => A11yScope.instance.setHighContrast(v),
@@ -729,7 +729,7 @@ class _FavoritesDrawer extends StatelessWidget {
           // TASK-072: DPDP "Clear My Footprint" — wipes ALL local Hive
           // boxes (favorites, persona, telemetry, cached schema, lifeline).
           ListTile(
-            leading: const Icon(Icons.delete_sweep_outlined),
+            leading: const Icon(Icons.delete_sweep),
             title: const Text('Clear My Footprint'),
             subtitle: const Text('Erase all on-device data (DPDP 2023)'),
             onTap: () async {
