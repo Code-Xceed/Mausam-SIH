@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sample NDMA SACHET-style CAP 1.2 alert bundle for the demo harness.
+  Two alerts: an active Severe cyclone warning polygon over the Konkan coast
+  (catches Mumbai fixtures) and an area-wide Heavy Rainfall warning.
+-->
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>ndma-sachet-demo-2026-cyclone-001</identifier>
+  <sender>cap@sachet.ndma.gov.in</sender>
+  <sent>2026-09-01T08:45:00+05:30</sent>
+  <status>Actual</status>
+  <msgType>Alert</msgType>
+  <scope>Public</scope>
+  <info>
+    <language>en-IN</language>
+    <category>Met</category>
+    <event>Cyclone Warning</event>
+    <urgency>Immediate</urgency>
+    <severity>Severe</severity>
+    <certainty>Likely</certainty>
+    <headline>Severe Cyclonic Storm approaching Konkan coast</headline>
+    <description>Severe cyclonic storm likely to cross Maharashtra coast between Raigad and Ratnagiri. Fishermen are advised not to venture into the sea. Coastal residents should follow evacuation advisories.</description>
+    <instruction>Move to designated cyclone shelters if instructed. Keep emergency kit ready. Avoid coastal areas.</instruction>
+    <expires>2026-09-02T08:45:00+05:30</expires>
+    <area>
+      <areaDesc>Konkan coast: Mumbai, Raigad, Ratnagiri coastal belt</areaDesc>
+      <polygon>
+        20.4,72.6
+        19.0,72.6
+        18.2,73.2
+        18.6,73.6
+        19.8,73.0
+        20.4,72.6
+      </polygon>
+    </area>
+  </info>
+  <info>
+    <language>en-IN</language>
+    <category>Met</category>
+    <event>Heavy Rainfall Warning</event>
+    <urgency>Expected</urgency>
+    <severity>Moderate</severity>
+    <certainty>Likely</certainty>
+    <headline>Heavy rainfall warning for Konkan and coastal Karnataka</headline>
+    <description>Heavy to very heavy rainfall at isolated places likely over Konkan and coastal Karnataka during next 48 hours.</description>
+    <expires>2026-09-03T08:45:00+05:30</expires>
+    <area>
+      <areaDesc>Konkan, Goa, coastal Karnataka and Kerala</areaDesc>
+      <polygon>
+        15.5,73.5
+        14.0,74.2
+        12.0,75.3
+        10.0,76.2
+        8.5,76.9
+        9.0,77.6
+        11.0,77.0
+        13.0,75.6
+        15.0,73.9
+        15.5,73.5
+      </polygon>
+    </area>
+  </info>
+</alert>

@@ -1,0 +1,53 @@
+{
+  "location": {
+    "display_name": "Shimla",
+    "district": "Shimla",
+    "state": "Himachal Pradesh",
+    "lat": 31.1048,
+    "lon": 77.1734
+  },
+  "current": {
+    "temperature_c": 11.4,
+    "feels_like_c": 9.2,
+    "humidity_pct": 66,
+    "wind_kmph": 8.4,
+    "wind_direction_deg": 300,
+    "condition": "fog",
+    "condition_text": "Mist with light drizzle on upper ridges",
+    "pressure_hpa": 858.0,
+    "visibility_m": 900,
+    "uv_index": 4.0,
+    "observed_at": "2026-09-01T09:30:00+00:00"
+  },
+  "hourly": [
+    { "time": "2026-09-01T09:00:00+00:00", "temperature_c": 11.4, "precipitation_probability_pct": 30, "precipitation_mm": 0.2, "wind_kmph": 8.4, "humidity_pct": 66, "condition": "fog" },
+    { "time": "2026-09-01T10:00:00+00:00", "temperature_c": 12.1, "precipitation_probability_pct": 25, "precipitation_mm": 0.1, "wind_kmph": 9.0, "humidity_pct": 62, "condition": "drizzle" },
+    { "time": "2026-09-01T11:00:00+00:00", "temperature_c": 13.0, "precipitation_probability_pct": 20, "precipitation_mm": 0.1, "wind_kmph": 9.6, "humidity_pct": 58, "condition": "partly_cloudy" },
+    { "time": "2026-09-01T12:00:00+00:00", "temperature_c": 13.8, "precipitation_probability_pct": 20, "precipitation_mm": 0.0, "wind_kmph": 10.2, "humidity_pct": 55, "condition": "partly_cloudy" },
+    { "time": "2026-09-01T13:00:00+00:00", "temperature_c": 14.2, "precipitation_probability_pct": 25, "precipitation_mm": 0.0, "wind_kmph": 10.8, "humidity_pct": 53, "condition": "cloudy" },
+    { "time": "2026-09-01T14:00:00+00:00", "temperature_c": 13.9, "precipitation_probability_pct": 30, "precipitation_mm": 0.2, "wind_kmph": 11.0, "humidity_pct": 56, "condition": "cloudy" },
+    { "time": "2026-09-01T15:00:00+00:00", "temperature_c": 13.2, "precipitation_probability_pct": 40, "precipitation_mm": 0.5, "wind_kmph": 11.6, "humidity_pct": 62, "condition": "drizzle" },
+    { "time": "2026-09-01T16:00:00+00:00", "temperature_c": 12.4, "precipitation_probability_pct": 45, "precipitation_mm": 0.8, "wind_kmph": 12.0, "humidity_pct": 68, "condition": "rain" },
+    { "time": "2026-09-01T17:00:00+00:00", "temperature_c": 11.6, "precipitation_probability_pct": 45, "precipitation_mm": 0.9, "wind_kmph": 11.2, "humidity_pct": 74, "condition": "rain" },
+    { "time": "2026-09-01T18:00:00+00:00", "temperature_c": 10.8, "precipitation_probability_pct": 40, "precipitation_mm": 0.5, "wind_kmph": 10.0, "humidity_pct": 79, "condition": "drizzle" },
+    { "time": "2026-09-01T19:00:00+00:00", "temperature_c": 10.0, "precipitation_probability_pct": 30, "precipitation_mm": 0.1, "wind_kmph": 9.2, "humidity_pct": 82, "condition": "cloudy" },
+    { "time": "2026-09-01T20:00:00+00:00", "temperature_c": 9.4, "precipitation_probability_pct": 25, "precipitation_mm": 0.0, "wind_kmph": 8.6, "humidity_pct": 84, "condition": "cloudy" }
+  ],
+  "daily": [
+    { "date": "2026-09-01T00:00:00+00:00", "temp_max_c": 14.2, "temp_min_c": 8.0, "precipitation_probability_pct": 45, "condition": "rain", "condition_text": "Light rain with mist on upper reaches", "sunrise": "2026-09-01T06:15:00+00:00", "sunset": "2026-09-01T18:33:00+00:00" },
+    { "date": "2026-09-02T00:00:00+00:00", "temp_max_c": 14.8, "temp_min_c": 8.2, "precipitation_probability_pct": 40, "condition": "partly_cloudy", "condition_text": "Partly cloudy; pleasant afternoon" },
+    { "date": "2026-09-03T00:00:00+00:00", "temp_max_c": 15.2, "temp_min_c": 8.4, "precipitation_probability_pct": 35, "condition": "partly_cloudy", "condition_text": "Mainly dry with morning mist" },
+    { "date": "2026-09-04T00:00:00+00:00", "temp_max_c": 15.0, "temp_min_c": 8.1, "precipitation_probability_pct": 50, "condition": "rain", "condition_text": "Rain likely towards evening" },
+    { "date": "2026-09-05T00:00:00+00:00", "temp_max_c": 14.4, "temp_min_c": 7.6, "precipitation_probability_pct": 55, "condition": "rain", "condition_text": "Rain at many places; cool spell continues" },
+    { "date": "2026-09-06T00:00:00+00:00", "temp_max_c": 13.8, "temp_min_c": 7.2, "precipitation_probability_pct": 45, "condition": "partly_cloudy", "condition_text": "Clearing skies; cold morning expected" },
+    { "date": "2026-09-07T00:00:00+00:00", "temp_max_c": 13.2, "temp_min_c": 6.4, "precipitation_probability_pct": 30, "condition": "partly_cloudy", "condition_text": "Cold morning; frost possible in valleys" }
+  ],
+  "nowcast": [],
+  "air_quality": {
+    "aqi": 35,
+    "dominating_pollutant": "PM10",
+    "pm10_ugm3": 35.0,
+    "observed_at": "2026-09-01T09:00:00+00:00"
+  },
+  "sources_used": ["IMD_FIXTURE"]
+}

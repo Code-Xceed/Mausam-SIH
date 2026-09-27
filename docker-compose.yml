@@ -1,0 +1,39 @@
+# Mausam Next-Gen — Phase 0 stack: FastAPI backend + Redis 7 edge cache.
+# Usage: docker compose up --build
+# (PostGIS intentionally deferred — CAP polygon checks use pure Python geometry.)
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: mausam-backend
+    ports:
+      - "8000:8000"
+    environment:
+      API_MODE: ${API_MODE:-HYBRID}
+      LIVE_TIMEOUT_MS: ${LIVE_TIMEOUT_MS:-1200}
+      REDIS_URL: redis://redis:6379/0
+      LOG_LEVEL: INFO
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: mausam-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  redis-data:

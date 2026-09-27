@@ -1,0 +1,70 @@
+{
+  "location": {
+    "display_name": "Mumbai",
+    "district": "Mumbai Suburban",
+    "state": "Maharashtra",
+    "lat": 19.0760,
+    "lon": 72.8777
+  },
+  "current": {
+    "temperature_c": 27.8,
+    "feels_like_c": 31.2,
+    "humidity_pct": 88,
+    "wind_kmph": 24.6,
+    "wind_direction_deg": 250,
+    "condition": "thunderstorm",
+    "condition_text": "Heavy rain with thunderstorm activity",
+    "pressure_hpa": 1002.1,
+    "visibility_m": 1800,
+    "uv_index": 3.0,
+    "observed_at": "2026-09-01T09:30:00+00:00"
+  },
+  "hourly": [
+    { "time": "2026-09-01T09:00:00+00:00", "temperature_c": 27.8, "precipitation_probability_pct": 85, "precipitation_mm": 6.2, "wind_kmph": 24.6, "humidity_pct": 88, "condition": "thunderstorm" },
+    { "time": "2026-09-01T10:00:00+00:00", "temperature_c": 27.4, "precipitation_probability_pct": 85, "precipitation_mm": 7.8, "wind_kmph": 26.1, "humidity_pct": 89, "condition": "rain" },
+    { "time": "2026-09-01T11:00:00+00:00", "temperature_c": 27.0, "precipitation_probability_pct": 80, "precipitation_mm": 5.5, "wind_kmph": 24.0, "humidity_pct": 90, "condition": "rain" },
+    { "time": "2026-09-01T12:00:00+00:00", "temperature_c": 26.8, "precipitation_probability_pct": 75, "precipitation_mm": 4.1, "wind_kmph": 22.5, "humidity_pct": 90, "condition": "rain" },
+    { "time": "2026-09-01T13:00:00+00:00", "temperature_c": 27.2, "precipitation_probability_pct": 70, "precipitation_mm": 3.0, "wind_kmph": 21.0, "humidity_pct": 89, "condition": "rain" },
+    { "time": "2026-09-01T14:00:00+00:00", "temperature_c": 27.6, "precipitation_probability_pct": 70, "precipitation_mm": 2.8, "wind_kmph": 20.2, "humidity_pct": 88, "condition": "rain" },
+    { "time": "2026-09-01T15:00:00+00:00", "temperature_c": 28.0, "precipitation_probability_pct": 75, "precipitation_mm": 4.4, "wind_kmph": 22.8, "humidity_pct": 87, "condition": "thunderstorm" },
+    { "time": "2026-09-01T16:00:00+00:00", "temperature_c": 27.9, "precipitation_probability_pct": 80, "precipitation_mm": 6.0, "wind_kmph": 25.5, "humidity_pct": 88, "condition": "rain" },
+    { "time": "2026-09-01T17:00:00+00:00", "temperature_c": 27.5, "precipitation_probability_pct": 85, "precipitation_mm": 7.2, "wind_kmph": 26.8, "humidity_pct": 89, "condition": "thunderstorm" },
+    { "time": "2026-09-01T18:00:00+00:00", "temperature_c": 27.1, "precipitation_probability_pct": 80, "precipitation_mm": 5.0, "wind_kmph": 24.0, "humidity_pct": 90, "condition": "rain" },
+    { "time": "2026-09-01T19:00:00+00:00", "temperature_c": 26.8, "precipitation_probability_pct": 70, "precipitation_mm": 3.2, "wind_kmph": 20.5, "humidity_pct": 91, "condition": "rain" },
+    { "time": "2026-09-01T20:00:00+00:00", "temperature_c": 26.6, "precipitation_probability_pct": 60, "precipitation_mm": 2.0, "wind_kmph": 18.0, "humidity_pct": 91, "condition": "rain" }
+  ],
+  "daily": [
+    { "date": "2026-09-01T00:00:00+00:00", "temp_max_c": 29.0, "temp_min_c": 25.8, "precipitation_probability_pct": 85, "condition": "thunderstorm", "condition_text": "Heavy rain warning; waterlogging likely in low-lying areas", "sunrise": "2026-09-01T06:18:00+00:00", "sunset": "2026-09-01T18:36:00+00:00" },
+    { "date": "2026-09-02T00:00:00+00:00", "temp_max_c": 29.2, "temp_min_c": 25.9, "precipitation_probability_pct": 80, "condition": "rain", "condition_text": "Heavy to very heavy rain at isolated places" },
+    { "date": "2026-09-03T00:00:00+00:00", "temp_max_c": 29.5, "temp_min_c": 26.0, "precipitation_probability_pct": 70, "condition": "rain", "condition_text": "Moderate to heavy rain" },
+    { "date": "2026-09-04T00:00:00+00:00", "temp_max_c": 29.8, "temp_min_c": 26.2, "precipitation_probability_pct": 60, "condition": "rain", "condition_text": "Moderate rain at many places" },
+    { "date": "2026-09-05T00:00:00+00:00", "temp_max_c": 30.2, "temp_min_c": 26.4, "precipitation_probability_pct": 50, "condition": "rain", "condition_text": "Rain at a few places" },
+    { "date": "2026-09-06T00:00:00+00:00", "temp_max_c": 30.6, "temp_min_c": 26.6, "precipitation_probability_pct": 45, "condition": "partly_cloudy", "condition_text": "Passing showers" },
+    { "date": "2026-09-07T00:00:00+00:00", "temp_max_c": 30.9, "temp_min_c": 26.8, "precipitation_probability_pct": 40, "condition": "partly_cloudy", "condition_text": "Partly cloudy" }
+  ],
+  "nowcast": [
+    {
+      "message": "Intense rain spell likely over Mumbai suburbs towards evening; local train services may be affected.",
+      "severity": "Severe",
+      "valid_from": "2026-09-01T14:00:00+00:00",
+      "valid_to": "2026-09-01T18:00:00+00:00",
+      "source": "IMD_NOWCAST"
+    }
+  ],
+  "marine": {
+    "significant_wave_height_m": 2.8,
+    "swell_period_s": 9.0,
+    "swell_height_m": 1.9,
+    "sst_c": 28.6,
+    "beach_flag": "red",
+    "observed_at": "2026-09-01T09:00:00+00:00"
+  },
+  "air_quality": {
+    "aqi": 64,
+    "dominating_pollutant": "PM10",
+    "pm10_ugm3": 63.6,
+    "pm2_5_ugm3": 28.4,
+    "observed_at": "2026-09-01T09:00:00+00:00"
+  },
+  "sources_used": ["IMD_FIXTURE", "CPCB_FIXTURE", "INCOIS_FIXTURE"]
+}

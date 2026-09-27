@@ -1,0 +1,31 @@
+{
+  "schema_version": "v1",
+  "location": { "display_name": "Your location", "district": null, "state": null, "lat": 0, "lon": 0 },
+  "personas": { "active": ["health", "commuter"], "engine": "bundled_fallback" },
+  "sources_used": ["OFFLINE_FALLBACK"],
+  "stale": true,
+  "widgets": [
+    {
+      "id": "current_conditions",
+      "type": "current_conditions",
+      "priority": 100,
+      "props": {
+        "temperature_c": 0,
+        "feels_like_c": null,
+        "condition": "partly_cloudy",
+        "condition_text": "Offline — cached conditions unavailable",
+        "humidity_pct": 0,
+        "wind_kmph": 0,
+        "observed_at": "1970-01-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "offline_notice",
+      "type": "persona_rank_row",
+      "priority": 90,
+      "props": {
+        "ranks": [{ "persona": "health", "note": "offline" }, { "persona": "commuter", "note": "offline" }]
+      }
+    }
+  ]
+}

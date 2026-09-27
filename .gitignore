@@ -1,0 +1,41 @@
+# ---- Python / Backend ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.local
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# ---- Flutter / Mobile ----
+mobile/.dart_tool/
+mobile/.flutter-plugins*
+mobile/.packages
+mobile/build/
+mobile/android/.gradle/
+mobile/android/app/.cxx/
+mobile/ios/Pods/
+mobile/ios/.symlinks/
+*.iml
+key.properties
+**/keystore.jks
+
+# ---- Node (docs tooling) ----
+node_modules/
+
+# ---- IDE / OS ----
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ---- Runtime state ----
+*.log
+backend/.redis-data/
+ml/models/*.npz

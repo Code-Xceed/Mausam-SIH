@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mausam-nextgen.sih/sdui_v1.schema.json",
+  "title": "Mausam SDUI v1",
+  "description": "Server-driven UI homepage contract. The backend composes persona-priority widget nodes; the Flutter client renders them from a fixed registry. Unknown widget types are skipped client-side (graceful degradation).",
+  "type": "object",
+  "required": ["schema_version", "location", "widgets"],
+  "properties": {
+    "schema_version": { "const": "v1" },
+    "location": {
+      "type": "object",
+      "required": ["display_name", "lat", "lon"],
+      "properties": {
+        "display_name": { "type": "string" },
+        "district": { "type": ["string", "null"] },
+        "state": { "type": ["string", "null"] },
+        "lat": { "type": "number" },
+        "lon": { "type": "number" }
+      }
+    },
+    "personas": {
+      "description": "Persona affinity values the client may display in the Algorithm Inspector (Phase 5).",
+      "type": "object"
+    },
+    "sources_used": { "type": "array", "items": { "type": "string" } },
+    "stale": { "type": "boolean", "default": false },
+    "widgets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/widget" }
+    }
+  },
+  "$defs": {
+    "widget": {
+      "type": "object",
+      "required": ["type", "props"],
+      "properties": {
+        "id": { "type": "string", "description": "Stable id for telemetry + reorder animation keys" },
+        "type": {
+          "description": "Registry key. Client skips any type it does not know.",
+          "type": "string",
+          "enum": [
+            "current_conditions",
+            "aqi_radial_meter",
+            "running_window_timeline",
+            "marine_tide_gauge",
+            "travel_packing_carousel",
+            "travel_multi_city_carousel",
+            "commute_safety_banner",
+            "meghdoot_agro_card",
+            "visibility_meter",
+            "event_planner_calendar",
+            "disaster_lifeline_card",
+            "persona_rank_row"
+          ]
+        },
+        "props": { "type": "object" },
+        "priority": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Composer urgency (Tier A). Replaced by LinUCB ranking in Phase 5."
+        }
+      }
+    }
+  }
+}

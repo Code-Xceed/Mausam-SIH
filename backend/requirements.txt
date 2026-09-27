@@ -1,0 +1,21 @@
+# Mausam Next-Gen backend dependencies (Phase 0)
+# Compatible with Python 3.11 (containers) and 3.14 (dev machine).
+# Pinned to versions verified working on Python 3.14.7 (2026-09).
+
+fastapi==0.141.1
+uvicorn[standard]==0.54.0
+pydantic==2.13.5
+pydantic-settings==2.15.0
+
+redis==8.1.0
+httpx==0.28.1
+
+# Phase 1+ (installed now to keep the venv stable through the hackathon)
+numpy==2.5.3
+scipy==1.18.1
+brotli==1.2.0
+xmltodict==1.0.4
+
+# Dev / test
+pytest==9.1.1
+pytest-asyncio==1.4.0

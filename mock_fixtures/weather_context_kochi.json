@@ -1,0 +1,56 @@
+{
+  "location": {
+    "display_name": "Kochi",
+    "district": "Ernakulam",
+    "state": "Kerala",
+    "lat": 9.9312,
+    "lon": 76.2673
+  },
+  "current": {
+    "temperature_c": 28.4,
+    "feels_like_c": 32.6,
+    "humidity_pct": 78,
+    "wind_kmph": 15.2,
+    "wind_direction_deg": 240,
+    "condition": "rain",
+    "condition_text": "Moderate rain with onshore winds",
+    "pressure_hpa": 1009.5,
+    "visibility_m": 6000,
+    "uv_index": 8.2,
+    "observed_at": "2026-09-01T09:30:00+00:00"
+  },
+  "hourly": [
+    { "time": "2026-09-01T09:00:00+00:00", "temperature_c": 28.4, "precipitation_probability_pct": 55, "precipitation_mm": 0.8, "wind_kmph": 15.2, "humidity_pct": 78, "condition": "rain" },
+    { "time": "2026-09-01T10:00:00+00:00", "temperature_c": 29.1, "precipitation_probability_pct": 50, "precipitation_mm": 0.6, "wind_kmph": 16.0, "humidity_pct": 76, "condition": "rain" },
+    { "time": "2026-09-01T11:00:00+00:00", "temperature_c": 29.8, "precipitation_probability_pct": 45, "precipitation_mm": 0.4, "wind_kmph": 17.1, "humidity_pct": 74, "condition": "partly_cloudy" },
+    { "time": "2026-09-01T12:00:00+00:00", "temperature_c": 30.2, "precipitation_probability_pct": 40, "precipitation_mm": 0.3, "wind_kmph": 18.3, "humidity_pct": 72, "condition": "partly_cloudy" },
+    { "time": "2026-09-01T13:00:00+00:00", "temperature_c": 30.0, "precipitation_probability_pct": 45, "precipitation_mm": 0.5, "wind_kmph": 19.0, "humidity_pct": 73, "condition": "cloudy" },
+    { "time": "2026-09-01T14:00:00+00:00", "temperature_c": 29.4, "precipitation_probability_pct": 55, "precipitation_mm": 1.1, "wind_kmph": 20.4, "humidity_pct": 77, "condition": "rain" },
+    { "time": "2026-09-01T15:00:00+00:00", "temperature_c": 28.8, "precipitation_probability_pct": 60, "precipitation_mm": 1.8, "wind_kmph": 21.2, "humidity_pct": 80, "condition": "rain" },
+    { "time": "2026-09-01T16:00:00+00:00", "temperature_c": 28.1, "precipitation_probability_pct": 60, "precipitation_mm": 2.0, "wind_kmph": 22.5, "humidity_pct": 83, "condition": "rain" },
+    { "time": "2026-09-01T17:00:00+00:00", "temperature_c": 27.6, "precipitation_probability_pct": 55, "precipitation_mm": 1.5, "wind_kmph": 21.0, "humidity_pct": 85, "condition": "rain" },
+    { "time": "2026-09-01T18:00:00+00:00", "temperature_c": 27.1, "precipitation_probability_pct": 45, "precipitation_mm": 0.7, "wind_kmph": 18.3, "humidity_pct": 86, "condition": "drizzle" },
+    { "time": "2026-09-01T19:00:00+00:00", "temperature_c": 26.8, "precipitation_probability_pct": 35, "precipitation_mm": 0.3, "wind_kmph": 15.1, "humidity_pct": 87, "condition": "cloudy" },
+    { "time": "2026-09-01T20:00:00+00:00", "temperature_c": 26.5, "precipitation_probability_pct": 30, "precipitation_mm": 0.2, "wind_kmph": 13.6, "humidity_pct": 88, "condition": "cloudy" }
+  ],
+  "daily": [
+    { "date": "2026-09-01T00:00:00+00:00", "temp_max_c": 30.2, "temp_min_c": 25.4, "precipitation_probability_pct": 60, "condition": "rain", "condition_text": "Moderate rain at many places", "sunrise": "2026-09-01T06:10:00+00:00", "sunset": "2026-09-01T18:25:00+00:00" },
+    { "date": "2026-09-02T00:00:00+00:00", "temp_max_c": 30.0, "temp_min_c": 25.2, "precipitation_probability_pct": 55, "condition": "rain", "condition_text": "Rain at most places" },
+    { "date": "2026-09-03T00:00:00+00:00", "temp_max_c": 29.7, "temp_min_c": 25.0, "precipitation_probability_pct": 50, "condition": "rain", "condition_text": "Rain at a few places" },
+    { "date": "2026-09-04T00:00:00+00:00", "temp_max_c": 30.1, "temp_min_c": 25.1, "precipitation_probability_pct": 40, "condition": "partly_cloudy", "condition_text": "Partly cloudy with passing showers" },
+    { "date": "2026-09-05T00:00:00+00:00", "temp_max_c": 30.4, "temp_min_c": 25.3, "precipitation_probability_pct": 35, "condition": "partly_cloudy", "condition_text": "Partly cloudy" },
+    { "date": "2026-09-06T00:00:00+00:00", "temp_max_c": 30.6, "temp_min_c": 25.4, "precipitation_probability_pct": 40, "condition": "rain", "condition_text": "Light rain likely" },
+    { "date": "2026-09-07T00:00:00+00:00", "temp_max_c": 30.5, "temp_min_c": 25.2, "precipitation_probability_pct": 45, "condition": "rain", "condition_text": "Rain at many places" }
+  ],
+  "nowcast": [],
+  "marine": {
+    "significant_wave_height_m": 1.6,
+    "swell_period_s": 12.0,
+    "swell_height_m": 1.1,
+    "sst_c": 28.2,
+    "beach_flag": "yellow",
+    "observed_at": "2026-09-01T09:00:00+00:00"
+  },
+  "air_quality": null,
+  "sources_used": ["INCOIS_FIXTURE", "IMD_FIXTURE"]
+}
