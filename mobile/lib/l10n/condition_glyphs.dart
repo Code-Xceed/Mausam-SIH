@@ -20,8 +20,9 @@ class ConditionGlyphs {
       case 'cloudy':
         return Icons.cloud;
       case 'fog':
+        return Icons.blur_on;
       case 'haze':
-        return Icons.foggy;
+        return Icons.dehaze;
       case 'drizzle':
         return Icons.water_drop;
       case 'rain':
@@ -62,6 +63,7 @@ class ConditionGlyphs {
       case 'cloudy':
         return 'Cloudy icon';
       case 'fog':
+        return 'Fog icon';
       case 'haze':
         return 'Haze icon';
       case 'drizzle':

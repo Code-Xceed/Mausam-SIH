@@ -21,9 +21,17 @@ const _extremeAlert = DisasterProps(
   ],
 );
 
+void setScreenSize(WidgetTester tester) {
+  tester.view.physicalSize = const Size(800, 2400);
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+}
+
 void main() {
   testWidgets('renders hijack header, severity chip and affected area',
       (tester) async {
+    setScreenSize(tester);
     await tester.pumpWidget(
       MaterialApp(
         home: LifelineScreen(alert: _extremeAlert, onAcknowledge: () {}),
@@ -38,6 +46,7 @@ void main() {
   });
 
   testWidgets('lists relief shelters with capacity + distance', (tester) async {
+    setScreenSize(tester);
     await tester.pumpWidget(
       MaterialApp(
         home: LifelineScreen(alert: _extremeAlert, onAcknowledge: () {}),
@@ -51,6 +60,7 @@ void main() {
   });
 
   testWidgets('shelter tap opens the guidance callout', (tester) async {
+    setScreenSize(tester);
     await tester.pumpWidget(
       MaterialApp(
         home: LifelineScreen(alert: _extremeAlert, onAcknowledge: () {}),
@@ -64,6 +74,7 @@ void main() {
 
   testWidgets('offline SOS chips render from alert emergency numbers',
       (tester) async {
+    setScreenSize(tester);
     await tester.pumpWidget(
       MaterialApp(
         home: LifelineScreen(alert: _extremeAlert, onAcknowledge: () {}),
@@ -77,6 +88,7 @@ void main() {
 
   testWidgets('SOS fallback appears when the alert has no numbers',
       (tester) async {
+    setScreenSize(tester);
     const bare = DisasterProps(
       event: 'Flood',
       severity: 'Severe',
@@ -93,6 +105,7 @@ void main() {
   });
 
   testWidgets('acknowledge button fires the callback', (tester) async {
+    setScreenSize(tester);
     var acked = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -106,6 +119,7 @@ void main() {
   });
 
   testWidgets('safety-steps row opens the plan bottom sheet', (tester) async {
+    setScreenSize(tester);
     await tester.pumpWidget(
       MaterialApp(
         home: LifelineScreen(alert: _extremeAlert, onAcknowledge: () {}),
@@ -119,6 +133,7 @@ void main() {
 
   testWidgets('checklist row pushes the bundled offline checklists',
       (tester) async {
+    setScreenSize(tester);
     await tester.pumpWidget(
       MaterialApp(
         home: LifelineScreen(alert: _extremeAlert, onAcknowledge: () {}),

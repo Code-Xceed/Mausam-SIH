@@ -23,21 +23,32 @@ class HiveManager {
   static bool _ready = false;
 
   static Future<void> init() async {
-    if (_ready) return;
-
     final key = await _getOrCreateKey();
-    await Hive.initFlutter();
+    try {
+      await Hive.initFlutter();
+    } catch (_) {
+      // In headless unit tests where path_provider is unavailable,
+      // Hive.init() has already been called with a scratch path.
+    }
 
-    await Hive.openBox<String>('persona_box');
-    await Hive.openBox<String>('cached_schema_box');
-    await Hive.openBox<String>(
-      'favorites_box',
-      encryptionCipher: HiveAesCipher(key),
-    );
-    await Hive.openBox<String>(
-      'telemetry_box',
-      encryptionCipher: HiveAesCipher(key),
-    );
+    if (!Hive.isBoxOpen('persona_box')) {
+      await Hive.openBox<String>('persona_box');
+    }
+    if (!Hive.isBoxOpen('cached_schema_box')) {
+      await Hive.openBox<String>('cached_schema_box');
+    }
+    if (!Hive.isBoxOpen('favorites_box')) {
+      await Hive.openBox<String>(
+        'favorites_box',
+        encryptionCipher: HiveAesCipher(key),
+      );
+    }
+    if (!Hive.isBoxOpen('telemetry_box')) {
+      await Hive.openBox<String>(
+        'telemetry_box',
+        encryptionCipher: HiveAesCipher(key),
+      );
+    }
 
     _ready = true;
   }

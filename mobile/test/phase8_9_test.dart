@@ -16,6 +16,19 @@ import 'package:mausam_nextgen/storage/hive_manager.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  late Directory scratch;
+
+  setUpAll(() async {
+    scratch = await Directory.systemTemp.createTemp('mausam_phase8_9_test');
+    Hive.init(scratch.path);
+  });
+
+  tearDownAll(() async {
+    await Hive.close();
+    try {
+      await scratch.delete(recursive: true);
+    } catch (_) {}
+  });
 
   group('push → lifeline takeover (TASK-051 logic half)', () {
     test('parses a CAP-derived FCM payload and raises the takeover', () async {
@@ -64,18 +77,6 @@ void main() {
   });
 
   group('language store (TASK-063)', () {
-    late Directory scratch;
-    setUpAll(() async {
-      scratch = await Directory.systemTemp.createTemp('mausam_lang_test');
-      Hive.init(scratch.path);
-    });
-    tearDownAll(() async {
-      if (Hive.isBoxOpen('persona_box')) await Hive.box<String>('persona_box').close();
-      try {
-        await scratch.delete(recursive: true);
-      } catch (_) {}
-    });
-
     test('defaults to English and persists a switch + offline bundle',
         () async {
       final store = LanguageStore();
@@ -122,7 +123,7 @@ void main() {
         await HiveManager.init();
         final lifeline = await Hive.openBox<String>('lifeline_box');
         await lifeline.put('demo_drill_v1', '{"headline":"x"}');
-        (Hive.box<String>('persona_box'))
+        await (Hive.box<String>('persona_box'))
             .put('active_personas', 'health,commuter');
 
         await HiveManager.purgeAll();

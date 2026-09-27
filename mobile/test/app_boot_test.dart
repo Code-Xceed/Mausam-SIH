@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:mausam_nextgen/audio/suno_mausam.dart';
 import 'package:mausam_nextgen/main.dart';
 import 'package:mausam_nextgen/push/home_widget_service.dart';
-import 'package:mausam_nextgen/audio/suno_mausam.dart';
+import 'package:mausam_nextgen/screens/onboarding_screen.dart';
 import 'package:mausam_nextgen/state/permissions.dart';
 
 /// Compilation + boot smoke: imports the app entrypoint (and the platform-
@@ -29,7 +30,7 @@ void main() {
 
     // Stub every platform channel touched on the boot path.
     for (final ch in const ['mausam/location', 'mausam/home_widget']) {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      TestWidgetsFlutterBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(MethodChannel(ch), (call) async => null);
     }
   });
@@ -57,6 +58,6 @@ void main() {
 
     // First launch (no saved personas) → onboarding screen renders.
     expect(find.byType(Navigator), findsOneWidget);
-    expect(find.textContaining('Mausam'), findsWidgets);
+    expect(find.byType(OnboardingScreen), findsOneWidget);
   });
 }
