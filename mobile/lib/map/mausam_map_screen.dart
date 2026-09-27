@@ -176,8 +176,9 @@ class _MausamMapScreenState extends State<MausamMapScreen> {
   }
 
   void _applyTapHandlers() {
-    _controller?.onFeatureTapped.add((id, point, latLng, layerId) async {
-      if (layerId != 'alerts-fill') return;
+    _controller?.onFeatureTapped.add((id, point, latLng) {
+      // Overlays carry no per-feature metadata across plugin versions, so
+      // any tap on the hazard map opens the safety guidance sheet.
       if (!mounted) return;
       showModalBottomSheet<void>(
         context: context,

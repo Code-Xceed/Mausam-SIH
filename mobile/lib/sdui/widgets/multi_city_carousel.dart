@@ -11,7 +11,7 @@ class MultiCityCarousel extends StatelessWidget {
 
   const MultiCityCarousel({super.key, required this.cities, this.onCityTap});
 
-  static Widget? build(dynamic widget, {ValueChanged<CitySummary>? onCityTap}) {
+  static Widget? fromSdui(dynamic widget, {ValueChanged<CitySummary>? onCityTap}) {
     try {
       final props = (widget as dynamic).props as Map<String, dynamic>;
       final cities = ((props['cities'] as List?) ?? const [])

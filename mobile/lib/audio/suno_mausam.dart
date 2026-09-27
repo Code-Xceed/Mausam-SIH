@@ -30,7 +30,6 @@ class SunoMausam {
 
   Future<void> _ensure(String lang) async {
     if (_initialized) return;
-    await _tts.setWaitForWakelock(true);
     await _tts.setSpeechRate(0.5); // slower = clearer for advisories
     await _tts.setVolume(1.0);
     await _tts.setPitch(1.0);

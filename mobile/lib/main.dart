@@ -228,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // TASK-052: feed the lifeline watcher the freshest payload.
       unawaited(_lifeline.recordPayload(payload));
       // TASK-076: update the home-screen widget snapshot.
-      _updateHomeWidget(payload);
+      if (payload != null) _updateHomeWidget(payload);
     } catch (e) {
       if (!mounted) return;
       setState(() => _error = e.toString());
@@ -495,6 +495,7 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: _FavoritesDrawer(
         favorites: _favs,
         onDemoDisaster: _stageDemoDisaster,
+        baseUrl: _repo.baseUrl,
         onSelect: (f) async {
           Navigator.of(context).pop();
           await widget.store.saveLocation(f.lat, f.lon);
@@ -636,12 +637,14 @@ class _FavoritesDrawer extends StatelessWidget {
   final ValueChanged<FavoriteLocation> onSelect;
   final ValueChanged<FavoriteLocation> onRemove;
   final VoidCallback onDemoDisaster;
+  final String baseUrl;
 
   const _FavoritesDrawer({
     required this.favorites,
     required this.onSelect,
     required this.onRemove,
     required this.onDemoDisaster,
+    required this.baseUrl,
   });
 
   @override
@@ -708,7 +711,7 @@ class _FavoritesDrawer extends StatelessWidget {
             subtitle: const Text('Live LinUCB context + arm scores'),
             onTap: () {
               Navigator.of(context).pop();
-              InspectorSheet.show(context, baseUrl: _repo.baseUrl);
+              InspectorSheet.show(context, baseUrl: baseUrl);
             },
           ),
           // TASK-066: accessibility toggles (elderly / low-vision users).
@@ -756,8 +759,8 @@ class _FavoritesDrawer extends StatelessWidget {
               );
               if (confirmed != true) return;
               await HiveManager.purgeAll();
-              if (!mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              if (!dialogCtx.mounted) return;
+              ScaffoldMessenger.of(dialogCtx).showSnackBar(const SnackBar(
                 content: Text('Footprint cleared — all local data erased'),
               ));
             },

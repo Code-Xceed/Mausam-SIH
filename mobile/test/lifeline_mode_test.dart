@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:mausam_nextgen/sdui/sdui_models.dart';
@@ -241,37 +242,41 @@ void main() {
       expect(c.active, isFalse);
     });
 
-    test('start() timer fetches and feeds the watcher; dispose stops it', () async {
-      final c = LifelineController();
-      addTearDown(c.dispose);
-      var calls = 0;
-      c.start(
-        fetch: () async {
-          calls += 1;
-          return _payloadWithCard(_feedAlert());
-        },
-        every: const Duration(milliseconds: 10),
-      );
-      // Generous windows: CI runners jitter hard on real timers.
-      await Future<void>.delayed(const Duration(milliseconds: 250));
-      expect(calls, greaterThanOrEqualTo(1));
-      expect(c.active, isTrue);
+    test('start() timer fetches and feeds the watcher; dispose stops it', () {
+      // fakeAsync: deterministic virtual time — no CI-jitter flakes.
+      fakeAsync((async) {
+        final c = LifelineController();
+        var calls = 0;
+        c.start(
+          fetch: () async {
+            calls += 1;
+            return _payloadWithCard(_feedAlert());
+          },
+          every: const Duration(milliseconds: 10),
+        );
+        async.elapse(const Duration(milliseconds: 35));
+        expect(calls, greaterThanOrEqualTo(1));
+        expect(c.active, isTrue);
 
-      final before = calls;
-      c.dispose();
-      await Future<void>.delayed(const Duration(milliseconds: 120));
-      expect(calls, before, reason: 'dispose must cancel the poll timer');
+        final before = calls;
+        c.dispose();
+        async.elapse(const Duration(milliseconds: 100));
+        expect(calls, before, reason: 'dispose must cancel the poll timer');
+      });
     });
 
-    test('fetch errors are swallowed, not propagated', () async {
-      final c = LifelineController();
-      addTearDown(c.dispose);
-      c.start(
-        fetch: () async => throw StateError('network dead'),
-        every: const Duration(milliseconds: 5),
-      );
-      await Future<void>.delayed(const Duration(milliseconds: 40));
-      expect(c.active, isFalse, reason: 'failed polls must not crash or activate');
+    test('fetch errors are swallowed, not propagated', () {
+      fakeAsync((async) {
+        final c = LifelineController();
+        addTearDown(c.dispose);
+        c.start(
+          fetch: () async => throw StateError('network dead'),
+          every: const Duration(milliseconds: 10),
+        );
+        async.elapse(const Duration(milliseconds: 50));
+        expect(c.active, isFalse,
+            reason: 'failed polls must not crash or activate');
+      });
     });
   });
 

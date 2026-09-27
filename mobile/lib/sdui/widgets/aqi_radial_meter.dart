@@ -11,7 +11,7 @@ class AqiRadialMeter extends StatelessWidget {
 
   const AqiRadialMeter({super.key, required this.props});
 
-  static Widget? build(dynamic widget) {
+  static Widget? fromSdui(dynamic widget) {
     final props = AqiProps.tryParse((widget as dynamic).props as Map<String, dynamic>);
     return props == null ? null : AqiRadialMeter(props: props);
   }

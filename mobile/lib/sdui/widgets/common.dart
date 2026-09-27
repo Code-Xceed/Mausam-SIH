@@ -41,12 +41,12 @@ IconData conditionIcon(String condition) {
     case 'clear':
       return Icons.wb_sunny_outlined;
     case 'partly_cloudy':
-      return Icons.partly_cloudy_day_outlined;
+      return Icons.wb_cloudy_outlined;
     case 'cloudy':
       return Icons.cloud_outlined;
     case 'fog':
     case 'haze':
-      return Icons.foggy_outlined;
+      return Icons.blur_on;
     case 'drizzle':
       return Icons.grain_outlined;
     case 'rain':

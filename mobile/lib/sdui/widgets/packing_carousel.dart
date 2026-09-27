@@ -9,7 +9,7 @@ class PackingCarousel extends StatelessWidget {
 
   const PackingCarousel({super.key, required this.props});
 
-  static Widget? build(dynamic widget) {
+  static Widget? fromSdui(dynamic widget) {
     final props = PackingProps.tryParse((widget as dynamic).props as Map<String, dynamic>);
     return props == null ? null : PackingCarousel(props: props);
   }

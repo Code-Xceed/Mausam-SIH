@@ -11,7 +11,7 @@ class MarineTideGauge extends StatelessWidget {
 
   const MarineTideGauge({super.key, required this.props});
 
-  static Widget? build(dynamic widget) {
+  static Widget? fromSdui(dynamic widget) {
     final props = MarineProps.tryParse((widget as dynamic).props as Map<String, dynamic>);
     return props == null ? null : MarineTideGauge(props: props);
   }

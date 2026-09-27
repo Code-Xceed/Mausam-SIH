@@ -11,7 +11,7 @@ class PersonaRankRow extends StatelessWidget {
 
   const PersonaRankRow({super.key, required this.personas, required this.note});
 
-  static Widget? build(dynamic widget) {
+  static Widget? fromSdui(dynamic widget) {
     try {
       final props = (widget as dynamic).props as Map<String, dynamic>;
       final ranks = (props['ranks'] as List?) ?? const [];

@@ -9,7 +9,7 @@ class AgroCard extends StatelessWidget {
 
   const AgroCard({super.key, required this.props});
 
-  static Widget? build(dynamic widget) {
+  static Widget? fromSdui(dynamic widget) {
     final props = AgroProps.tryParse((widget as dynamic).props as Map<String, dynamic>);
     return props == null ? null : AgroCard(props: props);
   }

@@ -9,7 +9,7 @@ class CommuteBanner extends StatelessWidget {
 
   const CommuteBanner({super.key, required this.props});
 
-  static Widget? build(dynamic widget) {
+  static Widget? fromSdui(dynamic widget) {
     final props = CommuteProps.tryParse((widget as dynamic).props as Map<String, dynamic>);
     return props == null ? null : CommuteBanner(props: props);
   }

@@ -16,7 +16,7 @@ class ConditionGlyphs {
       case 'clear':
         return Icons.wb_sunny;
       case 'partly_cloudy':
-        return Icons.partly_cloudy_day;
+        return Icons.wb_cloudy;
       case 'cloudy':
         return Icons.cloud;
       case 'fog':

@@ -11,7 +11,7 @@ class DisasterCard extends StatelessWidget {
 
   const DisasterCard({super.key, required this.props});
 
-  static Widget? build(dynamic widget) {
+  static Widget? fromSdui(dynamic widget) {
     final props = DisasterProps.tryParse((widget as dynamic).props as Map<String, dynamic>);
     return props == null ? null : DisasterCard(props: props);
   }

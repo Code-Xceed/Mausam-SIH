@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
@@ -27,10 +28,9 @@ void main() {
     await Hive.openBox<String>('persona_box');
 
     // Stub every platform channel touched on the boot path.
-    const channels = ['mausam/location', 'mausam/home_widget'];
-    for (final ch in channels) {
+    for (final ch in const ['mausam/location', 'mausam/home_widget']) {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(const MethodChannel(ch), (call) async => null);
+          .setMockMethodCallHandler(MethodChannel(ch), (call) async => null);
     }
   });
 

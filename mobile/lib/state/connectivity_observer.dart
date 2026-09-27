@@ -44,6 +44,9 @@ class BehaviorSubject<T> {
 
   BehaviorSubject(T initial) : _value = initial;
 
+  /// rxdart-compatible spelling used at declaration sites.
+  BehaviorSubject.seeded(T initial) : _value = initial;
+
   T get value => _value;
   Stream<T> get stream => _controller.stream;
 

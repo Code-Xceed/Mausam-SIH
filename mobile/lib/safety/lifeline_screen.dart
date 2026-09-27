@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show Clipboard;
+import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 
 import '../l10n/condition_glyphs.dart';
 import '../sdui/sdui_models.dart';
@@ -28,8 +28,6 @@ class LifelineScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final extreme = alert.severity.toLowerCase().contains('extreme');
     final headerColor = extreme ? const Color(0xFFB71C1C) : const Color(0xFFE65100);
-    // TASK-067: shape + color redundantly encode severity (no-literacy UX).
-    final (glyph, _) = ConditionGlyphs.severityGlyph(alert.severity);
 
     return Scaffold(
       backgroundColor: headerColor,
@@ -156,6 +154,8 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TASK-067: shape + color redundantly encode severity (no-literacy UX).
+    final (glyph, _) = ConditionGlyphs.severityGlyph(alert.severity);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
       child: Column(

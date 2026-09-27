@@ -9,7 +9,7 @@ class EventCalendar extends StatelessWidget {
 
   const EventCalendar({super.key, required this.props});
 
-  static Widget? build(dynamic widget) {
+  static Widget? fromSdui(dynamic widget) {
     final props = EventCalendarProps.tryParse((widget as dynamic).props as Map<String, dynamic>);
     return props == null ? null : EventCalendar(props: props);
   }

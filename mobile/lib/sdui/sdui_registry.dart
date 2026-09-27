@@ -28,22 +28,22 @@ class SduiActions {
 }
 
 const Map<String, WidgetBuilder> kSduiRegistry = {
-  'current_conditions': CurrentConditionsCard.build,
-  'aqi_radial_meter': AqiRadialMeter.build,
-  'running_window_timeline': RunningTimeline.build,
-  'marine_tide_gauge': MarineTideGauge.build,
-  'travel_packing_carousel': PackingCarousel.build,
+  'current_conditions': CurrentConditionsCard.fromSdui,
+  'aqi_radial_meter': AqiRadialMeter.fromSdui,
+  'running_window_timeline': RunningTimeline.fromSdui,
+  'marine_tide_gauge': MarineTideGauge.fromSdui,
+  'travel_packing_carousel': PackingCarousel.fromSdui,
   'travel_multi_city_carousel': _buildMultiCity,
-  'commute_safety_banner': CommuteBanner.build,
-  'meghdoot_agro_card': AgroCard.build,
-  'visibility_meter': VisibilityMeter.build,
-  'event_planner_calendar': EventCalendar.build,
-  'disaster_lifeline_card': DisasterCard.build,
-  'persona_rank_row': PersonaRankRow.build,
+  'commute_safety_banner': CommuteBanner.fromSdui,
+  'meghdoot_agro_card': AgroCard.fromSdui,
+  'visibility_meter': VisibilityMeter.fromSdui,
+  'event_planner_calendar': EventCalendar.fromSdui,
+  'disaster_lifeline_card': DisasterCard.fromSdui,
+  'persona_rank_row': PersonaRankRow.fromSdui,
 };
 
 Widget? _buildMultiCity(SduiWidget widget, {SduiActions? actions}) =>
-    MultiCityCarousel.build(widget, onCityTap: actions?.onCityTap);
+    MultiCityCarousel.fromSdui(widget, onCityTap: actions?.onCityTap);
 
 /// Builds one SDUI node with full error containment (TASK-018):
 ///   1. Unknown type → skipped (returns null).
