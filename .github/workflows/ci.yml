@@ -20,6 +20,13 @@ jobs:
       - run: pip install -r requirements.txt jsonschema
       - name: Full backend suite (unit + acceptance + evidence)
         run: python -m pytest -q -p no:warnings
+      - name: Full-service benchmark vs acceptance targets (47 gates)
+        run: python scripts/benchmark.py
+      - name: Upload benchmark evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-report
+          path: docs/evidence/benchmark_report.json
       - name: TASK-046 replay evaluation artifact
         run: |
           python ../ml/replay_eval.py --rounds 2000

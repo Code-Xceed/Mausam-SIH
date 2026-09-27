@@ -1,0 +1,491 @@
+{
+  "generated_at": "2026-09-27T20:35:58Z",
+  "targets_total": 47,
+  "passed": 47,
+  "failed": 0,
+  "results": [
+    {
+      "section": "meta",
+      "metric": "health.p95_ms",
+      "measured": 1.172,
+      "target": 50,
+      "unit": "ms",
+      "basis": "TASK-069 liveness probe responsiveness",
+      "status": "PASS",
+      "p50_ms": 0.832,
+      "samples": 50
+    },
+    {
+      "section": "meta",
+      "metric": "ready.p95_ms",
+      "measured": 1.646,
+      "target": 50,
+      "unit": "ms",
+      "basis": "readiness probe",
+      "status": "PASS",
+      "p50_ms": 0.965,
+      "samples": 20
+    },
+    {
+      "section": "weather",
+      "metric": "context_delhi.p95_ms",
+      "measured": 4.121,
+      "target": 500,
+      "unit": "ms",
+      "basis": "full gateway compose (fixture replay)",
+      "status": "PASS",
+      "p50_ms": 3.47,
+      "samples": 10
+    },
+    {
+      "section": "weather",
+      "metric": "context_mumbai.p95_ms",
+      "measured": 5.063,
+      "target": 500,
+      "unit": "ms",
+      "basis": "full gateway compose (fixture replay)",
+      "status": "PASS",
+      "p50_ms": 3.76,
+      "samples": 10
+    },
+    {
+      "section": "weather",
+      "metric": "context_kochi.p95_ms",
+      "measured": 4.288,
+      "target": 500,
+      "unit": "ms",
+      "basis": "full gateway compose (fixture replay)",
+      "status": "PASS",
+      "p50_ms": 3.628,
+      "samples": 10
+    },
+    {
+      "section": "weather",
+      "metric": "context_vidarbha.p95_ms",
+      "measured": 3.062,
+      "target": 500,
+      "unit": "ms",
+      "basis": "full gateway compose (fixture replay)",
+      "status": "PASS",
+      "p50_ms": 2.69,
+      "samples": 10
+    },
+    {
+      "section": "weather",
+      "metric": "context_shimla.p95_ms",
+      "measured": 2.534,
+      "target": 500,
+      "unit": "ms",
+      "basis": "full gateway compose (fixture replay)",
+      "status": "PASS",
+      "p50_ms": 2.273,
+      "samples": 10
+    },
+    {
+      "section": "sdui",
+      "metric": "home_delhi.p95_ms",
+      "measured": 9.894,
+      "target": 250,
+      "unit": "ms",
+      "basis": "TASK-016 compose+serialize budget",
+      "status": "PASS",
+      "p50_ms": 7.82,
+      "samples": 30
+    },
+    {
+      "section": "sdui",
+      "metric": "home.payload_bytes",
+      "measured": 2609,
+      "target": 15360,
+      "unit": "B",
+      "basis": "TASK-016 15 KB budget (uncompressed)",
+      "status": "PASS"
+    },
+    {
+      "section": "sdui",
+      "metric": "home.payload_brotli_bytes",
+      "measured": 805,
+      "target": 15360,
+      "unit": "B",
+      "basis": "wire size with Accept-Encoding: br",
+      "status": "PASS"
+    },
+    {
+      "section": "sdui",
+      "metric": "home.compression_ratio",
+      "measured": 3.241,
+      "target": 1.0,
+      "unit": "x",
+      "basis": "uncompressed/wire \u2014 higher is better",
+      "status": "PASS"
+    },
+    {
+      "section": "sdui",
+      "metric": "revalidation_304.p95_ms",
+      "measured": 2.782,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-022 pull-to-refresh save",
+      "status": "PASS"
+    },
+    {
+      "section": "sdui",
+      "metric": "home_bandit_engine.p95_ms",
+      "measured": 14.424,
+      "target": 250,
+      "unit": "ms",
+      "basis": "LinUCB ranking variant",
+      "status": "PASS",
+      "p50_ms": 10.625,
+      "samples": 15
+    },
+    {
+      "section": "sdui",
+      "metric": "home_multi_city.p95_ms",
+      "measured": 21.176,
+      "target": 250,
+      "unit": "ms",
+      "basis": "TASK-034 carousel with 3 extra cities",
+      "status": "PASS",
+      "p50_ms": 18.497,
+      "samples": 10
+    },
+    {
+      "section": "ml",
+      "metric": "context_vector.ms",
+      "measured": 0.013,
+      "target": 5,
+      "unit": "ms",
+      "basis": "TASK-040 <5 ms",
+      "status": "PASS"
+    },
+    {
+      "section": "ml",
+      "metric": "linucb_select.avg_ms",
+      "measured": 0.327,
+      "target": 5,
+      "unit": "ms",
+      "basis": "TASK-041 UCB over 9 arms",
+      "status": "PASS"
+    },
+    {
+      "section": "ml",
+      "metric": "bandit_ranker.rank.avg_ms",
+      "measured": 0.331,
+      "target": 25,
+      "unit": "ms",
+      "basis": "full ranking incl. warm priors",
+      "status": "PASS"
+    },
+    {
+      "section": "telemetry",
+      "metric": "interaction.p95_ms",
+      "measured": 1.853,
+      "target": 50,
+      "unit": "ms",
+      "basis": "TASK-043 204 immediate, non-blocking",
+      "status": "PASS",
+      "p50_ms": 1.003,
+      "samples": 30
+    },
+    {
+      "section": "bandit_api",
+      "metric": "stats.p95_ms",
+      "measured": 1.79,
+      "target": 100,
+      "unit": "ms",
+      "basis": "inspector payload",
+      "status": "PASS",
+      "p50_ms": 0.989,
+      "samples": 10
+    },
+    {
+      "section": "bandit_api",
+      "metric": "arms.p95_ms",
+      "measured": 1.182,
+      "target": 100,
+      "unit": "ms",
+      "basis": "arm vocabulary",
+      "status": "PASS",
+      "p50_ms": 0.967,
+      "samples": 10
+    },
+    {
+      "section": "geofence",
+      "metric": "mumbai_circle.resolve_ms",
+      "measured": 1.058,
+      "target": 500,
+      "unit": "ms",
+      "basis": "TASK-049 polygon clipping (158 cells)",
+      "status": "PASS"
+    },
+    {
+      "section": "cap",
+      "metric": "parse_fixture.ms",
+      "measured": 0.381,
+      "target": 50,
+      "unit": "ms",
+      "basis": "TASK-048 parse (2 infos)",
+      "status": "PASS"
+    },
+    {
+      "section": "dispatcher",
+      "metric": "inject_alert.total_ms",
+      "measured": 3.41,
+      "target": 2500,
+      "unit": "ms",
+      "basis": "TASK-050/054 full geofence+dispatch budget",
+      "status": "PASS"
+    },
+    {
+      "section": "dispatcher",
+      "metric": "dispatch.topics",
+      "measured": 158,
+      "target": 1,
+      "unit": "topics",
+      "basis": "geofence fan-out must resolve >= 1 topic",
+      "status": "PASS"
+    },
+    {
+      "section": "cap",
+      "metric": "poll_now.p95_ms",
+      "measured": 2.054,
+      "target": 2500,
+      "unit": "ms",
+      "basis": "TASK-048 diff tick (ingest+dispatch)",
+      "status": "PASS",
+      "p50_ms": 1.766,
+      "samples": 5
+    },
+    {
+      "section": "cap",
+      "metric": "admin_alerts.p95_ms",
+      "measured": 1.333,
+      "target": 100,
+      "unit": "ms",
+      "basis": "control-panel listing",
+      "status": "PASS",
+      "p50_ms": 1.09,
+      "samples": 10
+    },
+    {
+      "section": "alerts",
+      "metric": "active_feed.p95_ms",
+      "measured": 1.827,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-055 map polygon feed",
+      "status": "PASS",
+      "p50_ms": 1.305,
+      "samples": 10
+    },
+    {
+      "section": "favorites",
+      "metric": "sync.p95_ms",
+      "measured": 1.904,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-028 dual-write mirror",
+      "status": "PASS",
+      "p50_ms": 1.111,
+      "samples": 20
+    },
+    {
+      "section": "favorites",
+      "metric": "fetch.p95_ms",
+      "measured": 2.098,
+      "target": 100,
+      "unit": "ms",
+      "basis": "multi-device restore",
+      "status": "PASS",
+      "p50_ms": 1.32,
+      "samples": 20
+    },
+    {
+      "section": "privacy",
+      "metric": "purge.ms",
+      "measured": 7.105,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-072 erase-all",
+      "status": "PASS"
+    },
+    {
+      "section": "i18n",
+      "metric": "languages.p95_ms",
+      "measured": 3.468,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-063 selector vocab",
+      "status": "PASS",
+      "p50_ms": 2.453,
+      "samples": 10
+    },
+    {
+      "section": "i18n",
+      "metric": "strings_hi.p95_ms",
+      "measured": 2.346,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-062 offline bundle",
+      "status": "PASS",
+      "p50_ms": 1.98,
+      "samples": 6
+    },
+    {
+      "section": "i18n",
+      "metric": "strings_ta.p95_ms",
+      "measured": 2.194,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-062 offline bundle",
+      "status": "PASS",
+      "p50_ms": 1.939,
+      "samples": 6
+    },
+    {
+      "section": "i18n",
+      "metric": "strings_bn.p95_ms",
+      "measured": 2.161,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-062 offline bundle",
+      "status": "PASS",
+      "p50_ms": 1.73,
+      "samples": 6
+    },
+    {
+      "section": "i18n",
+      "metric": "strings_te.p95_ms",
+      "measured": 1.529,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-062 offline bundle",
+      "status": "PASS",
+      "p50_ms": 1.399,
+      "samples": 6
+    },
+    {
+      "section": "i18n",
+      "metric": "strings_mr.p95_ms",
+      "measured": 1.446,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-062 offline bundle",
+      "status": "PASS",
+      "p50_ms": 1.368,
+      "samples": 6
+    },
+    {
+      "section": "i18n",
+      "metric": "translate.p95_ms",
+      "measured": 1.555,
+      "target": 100,
+      "unit": "ms",
+      "basis": "glossary engine",
+      "status": "PASS",
+      "p50_ms": 1.256,
+      "samples": 15
+    },
+    {
+      "section": "geo",
+      "metric": "boundaries.p95_ms",
+      "measured": 1.367,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-060 boundary rings",
+      "status": "PASS",
+      "p50_ms": 1.15,
+      "samples": 10
+    },
+    {
+      "section": "geo",
+      "metric": "tile_z5.p95_ms",
+      "measured": 1.625,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-059 viewport bundle",
+      "status": "PASS",
+      "p50_ms": 1.284,
+      "samples": 8
+    },
+    {
+      "section": "geo",
+      "metric": "tile_z5.bytes",
+      "measured": 564,
+      "target": 60000,
+      "unit": "B",
+      "basis": "TASK-059 <60 KB per view",
+      "status": "PASS"
+    },
+    {
+      "section": "geo",
+      "metric": "tile_z7.p95_ms",
+      "measured": 1.371,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-059 viewport bundle",
+      "status": "PASS",
+      "p50_ms": 1.286,
+      "samples": 8
+    },
+    {
+      "section": "geo",
+      "metric": "tile_z7.bytes",
+      "measured": 665,
+      "target": 60000,
+      "unit": "B",
+      "basis": "TASK-059 <60 KB per view",
+      "status": "PASS"
+    },
+    {
+      "section": "geo",
+      "metric": "tile_z11.p95_ms",
+      "measured": 2.127,
+      "target": 100,
+      "unit": "ms",
+      "basis": "TASK-059 viewport bundle",
+      "status": "PASS",
+      "p50_ms": 1.328,
+      "samples": 8
+    },
+    {
+      "section": "geo",
+      "metric": "tile_z11.bytes",
+      "measured": 318,
+      "target": 60000,
+      "unit": "B",
+      "basis": "TASK-059 <60 KB per view",
+      "status": "PASS"
+    },
+    {
+      "section": "personas",
+      "metric": "list.p95_ms",
+      "measured": 1.447,
+      "target": 100,
+      "unit": "ms",
+      "basis": "persona vocabulary",
+      "status": "PASS",
+      "p50_ms": 1.197,
+      "samples": 10
+    },
+    {
+      "section": "bandwidth",
+      "metric": "session_5min.bytes",
+      "measured": 61162,
+      "target": 1200000,
+      "unit": "B",
+      "basis": "TASK-071 <1.2 MB per 5-min session",
+      "status": "PASS"
+    },
+    {
+      "section": "concurrency",
+      "metric": "sdui_x50.p95_ms",
+      "measured": 16.035,
+      "target": 500,
+      "unit": "ms",
+      "basis": "single-worker in-process saturation",
+      "status": "PASS"
+    }
+  ]
+}

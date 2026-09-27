@@ -1,0 +1,6 @@
+# Local properties for Gradle build.
+# Copy or rename to 'local.properties' and fill in your local paths:
+sdk.dir=C:\\Users\\CodeX\\AppData\\Local\\Android\\Sdk
+flutter.sdk=C:\\path\\to\\flutter
+flutter.versionCode=1
+flutter.versionName=1.0.0

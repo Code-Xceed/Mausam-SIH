@@ -1,5 +1,5 @@
 {
-  "session_bytes": 50385,
+  "session_bytes": 53045,
   "budget_bytes": 1200000,
   "components": "10x sdui/home + personas + i18n bundle + boundaries + alerts"
 }
