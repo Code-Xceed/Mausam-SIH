@@ -47,12 +47,21 @@ async def languages() -> dict:
 
 @router.get("/strings/{lang}")
 async def strings(lang: str) -> dict:
-    """Full UI string bundle for one language (client caches per install)."""
+    """Full UI string bundle for one language (client caches per install).
+
+    Returns a FLAT term → translated-string map (UI_STRINGS is authored as
+    term → per-language dict internally; the client wants one flat view).
+    """
     if lang not in SUPPORTED_LANGUAGES:
         raise HTTPException(404, f"unsupported language: {lang}")
+    flat = {
+        term: (per_lang.get(lang) or per_lang.get("en") or term)
+        for term, per_lang in UI_STRINGS.items()
+        if isinstance(per_lang, dict)
+    }
     return {
         "lang": lang,
-        "strings": translate_bundle(UI_STRINGS, lang),
+        "strings": flat,
         "glossary": {
             en: translations.get(lang, en)
             for en, translations in GLOSSARY.items()

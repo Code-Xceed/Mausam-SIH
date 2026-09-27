@@ -228,6 +228,19 @@ class TestCap:
         assert nc["severity"] == "Severe"
         assert nc["message"] == "Test cyclone"
 
+    def test_fixture_rainfall_geometry_matches_area_desc(self) -> None:
+        """The Heavy Rainfall areaDesc claims Konkan — the polygon must
+        actually reach Konkan (audit found text/geometry drift)."""
+        from pathlib import Path
+
+        fixture = Path(__file__).resolve().parents[2] / "mock_fixtures" / "cap_alerts.xml"
+        alerts = parse_cap_xml(
+            fixture.read_text(encoding="utf-8"), expired_policy="extend"
+        )
+        rainfall = next(a for a in alerts if a["event"] == "Heavy Rainfall Warning")
+        lats = [pt[0] for poly in rainfall["polygons"] for pt in poly]
+        assert max(lats) >= 19.0, "rainfall polygon must reach Konkan (19N)"
+
 
 # --------------------------------------------------------------------------- #
 # CPCB station aggregation

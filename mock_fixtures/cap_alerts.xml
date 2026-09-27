@@ -46,7 +46,11 @@
     <expires>2026-09-03T08:45:00+05:30</expires>
     <area>
       <areaDesc>Konkan, Goa, coastal Karnataka and Kerala</areaDesc>
+      <!-- Geometry must match the areaDesc: the band now reaches north to
+           19.4N so Konkan (incl. Mumbai coast) is genuinely inside. -->
       <polygon>
+        19.4,72.5
+        17.0,73.3
         15.5,73.5
         14.0,74.2
         12.0,75.3
@@ -56,7 +60,9 @@
         11.0,77.0
         13.0,75.6
         15.0,73.9
-        15.5,73.5
+        17.5,73.0
+        19.4,73.1
+        19.4,72.5
       </polygon>
     </area>
   </info>
