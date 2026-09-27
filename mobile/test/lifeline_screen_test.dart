@@ -128,7 +128,8 @@ void main() {
 
     await tester.tap(find.text('Immediate safety steps'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Move to the nearest shelter'), findsOneWidget);
+    expect(find.byType(BottomSheet), findsOneWidget);
+    expect(find.textContaining('Move to the nearest shelter'), findsWidgets);
   });
 
   testWidgets('checklist row pushes the bundled offline checklists',

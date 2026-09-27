@@ -759,8 +759,8 @@ class _FavoritesDrawer extends StatelessWidget {
               );
               if (confirmed != true) return;
               await HiveManager.purgeAll();
-              if (!dialogCtx.mounted) return;
-              ScaffoldMessenger.of(dialogCtx).showSnackBar(const SnackBar(
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Footprint cleared — all local data erased'),
               ));
             },

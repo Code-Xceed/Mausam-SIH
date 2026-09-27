@@ -24,7 +24,9 @@ void main() {
   });
 
   tearDownAll(() async {
-    await Hive.close();
+    try {
+      await Hive.close();
+    } catch (_) {}
     try {
       await scratch.delete(recursive: true);
     } catch (_) {}
@@ -117,23 +119,17 @@ void main() {
 
   group('DPDP purge (TASK-072 mobile half)', () {
     test('purgeAll wipes every box including lifeline_box', () async {
-      final scratch = await Directory.systemTemp.createTemp('mausam_purge');
-      Hive.init(scratch.path);
-      try {
-        await HiveManager.init();
-        final lifeline = await Hive.openBox<String>('lifeline_box');
-        await lifeline.put('demo_drill_v1', '{"headline":"x"}');
-        await (Hive.box<String>('persona_box'))
-            .put('active_personas', 'health,commuter');
+      await HiveManager.init();
+      final lifeline = await Hive.openBox<String>('lifeline_box');
+      await lifeline.put('demo_drill_v1', '{"headline":"x"}');
+      await (Hive.box<String>('persona_box'))
+          .put('active_personas', 'health,commuter');
 
-        await HiveManager.purgeAll();
+      await HiveManager.purgeAll();
 
-        expect(lifeline.get('demo_drill_v1'), isNull);
-        expect(Hive.box<String>('persona_box').get('active_personas'), isNull);
-        expect(Hive.box<String>('favorites_box').isEmpty, isTrue);
-      } finally {
-        await scratch.delete(recursive: true);
-      }
+      expect(lifeline.get('demo_drill_v1'), isNull);
+      expect(Hive.box<String>('persona_box').get('active_personas'), isNull);
+      expect(Hive.box<String>('favorites_box').isEmpty, isTrue);
     });
   });
 

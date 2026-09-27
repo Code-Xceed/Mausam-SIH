@@ -36,7 +36,9 @@ void main() {
   });
 
   tearDownAll(() async {
-    if (Hive.isBoxOpen('persona_box')) await Hive.box<String>('persona_box').close();
+    try {
+      if (Hive.isBoxOpen('persona_box')) await Hive.box<String>('persona_box').close();
+    } catch (_) {}
     try {
       await scratch.delete(recursive: true);
     } catch (_) {}
