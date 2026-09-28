@@ -81,3 +81,27 @@ jobs:
       - name: flutter test (29+ mobile tests)
         run: flutter test
         working-directory: mobile
+
+  build-apk:
+    needs: [flutter-tests, schema-contract]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: mobile
+      - name: Build Android Release APK
+        run: flutter build apk --release --split-per-abi
+        working-directory: mobile
+      - name: Upload Release APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: mausam-nextgen-apk
+          path: mobile/build/app/outputs/flutter-apk/*.apk
