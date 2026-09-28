@@ -80,7 +80,7 @@ class _PersonaSwitcherSheetState extends State<PersonaSwitcherSheet> {
     try {
       final base = const String.fromEnvironment(
         'BACKEND_URL',
-        defaultValue: 'http://10.0.2.2:8000',
+        defaultValue: 'https://mausam-nextgen.onrender.com',
       );
       final res = await http
           .get(Uri.parse('$base/v1/personas'))

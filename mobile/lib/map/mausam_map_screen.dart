@@ -40,7 +40,7 @@ class _MausamMapScreenState extends State<MausamMapScreen> {
   final _http = http.Client();
   static const _baseUrl = String.fromEnvironment(
     'BACKEND_URL',
-    defaultValue: 'http://10.0.2.2:8000',
+    defaultValue: 'https://mausam-nextgen.onrender.com',
   );
   bool _alertsOn = true;
   bool _boundariesOn = true;

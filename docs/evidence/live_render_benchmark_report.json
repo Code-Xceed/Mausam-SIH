@@ -1,0 +1,225 @@
+{
+  "timestamp": "2026-09-28T13:21:23Z",
+  "target_url": "https://mausam-nextgen.onrender.com",
+  "total_checks": 24,
+  "passed": 24,
+  "warnings": 0,
+  "metrics": [
+    {
+      "category": "render_meta",
+      "name": "health_p95",
+      "measured": 447.844,
+      "target": 1200.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Environment: prod, API_MODE: HYBRID"
+    },
+    {
+      "category": "render_meta",
+      "name": "ready_p95",
+      "measured": 264.987,
+      "target": 1200.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Readiness probe"
+    },
+    {
+      "category": "render_weather",
+      "name": "context_delhi_p95",
+      "measured": 290.489,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "New Delhi: 34.2\u00b0C, Haze with moderate air quality"
+    },
+    {
+      "category": "render_weather",
+      "name": "context_mumbai_p95",
+      "measured": 261.282,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Mumbai: 27.8\u00b0C, Heavy rain with thunderstorm activity"
+    },
+    {
+      "category": "render_weather",
+      "name": "context_kochi_p95",
+      "measured": 289.95,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Kochi: 28.4\u00b0C, Moderate rain with onshore winds"
+    },
+    {
+      "category": "render_weather",
+      "name": "context_vidarbha_p95",
+      "measured": 295.254,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Nagpur / Vidarbha: 33.1\u00b0C, Mainly clear with afternoon heat"
+    },
+    {
+      "category": "render_weather",
+      "name": "context_shimla_p95",
+      "measured": 288.705,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Shimla: 11.4\u00b0C, Mist with light drizzle on upper ridges"
+    },
+    {
+      "category": "render_weather",
+      "name": "context_kolkata_p95",
+      "measured": 253.354,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Kolkata: 33.1\u00b0C, Mainly clear with afternoon heat"
+    },
+    {
+      "category": "render_weather",
+      "name": "context_bengaluru_p95",
+      "measured": 284.609,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Bengaluru: 28.4\u00b0C, Moderate rain with onshore winds"
+    },
+    {
+      "category": "render_sdui",
+      "name": "sdui_delhi_p95",
+      "measured": 293.755,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Generated 7 cards: aqi_radial_meter, visibility_meter, current_conditions..."
+    },
+    {
+      "category": "render_sdui",
+      "name": "sdui_mumbai_p95",
+      "measured": 277.258,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Generated 8 cards: disaster_lifeline_card, commute_safety_banner, marine_tide_gauge..."
+    },
+    {
+      "category": "render_sdui",
+      "name": "sdui_kochi_p95",
+      "measured": 279.321,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Generated 8 cards: commute_safety_banner, marine_tide_gauge, travel_packing_carousel..."
+    },
+    {
+      "category": "render_sdui",
+      "name": "sdui_vidarbha_p95",
+      "measured": 271.13,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Generated 8 cards: meghdoot_agro_card, current_conditions, event_planner_calendar..."
+    },
+    {
+      "category": "render_sdui",
+      "name": "sdui_shimla_p95",
+      "measured": 291.496,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Generated 8 cards: visibility_meter, travel_packing_carousel, event_planner_calendar..."
+    },
+    {
+      "category": "render_sdui",
+      "name": "sdui_kolkata_p95",
+      "measured": 258.85,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Generated 8 cards: event_planner_calendar, travel_packing_carousel, aqi_radial_meter..."
+    },
+    {
+      "category": "render_sdui",
+      "name": "sdui_bengaluru_p95",
+      "measured": 260.801,
+      "target": 2500.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Generated 7 cards: commute_safety_banner, visibility_meter, current_conditions..."
+    },
+    {
+      "category": "render_sdui",
+      "name": "multi_city_fanout_p95",
+      "measured": 283.346,
+      "target": 3000.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Synthesized 5 metro summaries in parallel"
+    },
+    {
+      "category": "render_wire",
+      "name": "sdui_uncompressed_bytes",
+      "measured": 2613,
+      "target": 15360,
+      "unit": "B",
+      "status": "PASS",
+      "note": "Uncompressed JSON payload size"
+    },
+    {
+      "category": "render_wire",
+      "name": "etag_revalidation_ms",
+      "measured": 295.199,
+      "target": 800.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "304 Not Modified status: True (Zero payload bandwidth)"
+    },
+    {
+      "category": "render_ml",
+      "name": "telemetry_ingest_ms",
+      "measured": 258.999,
+      "target": 800.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Response code 204 (Non-blocking reward ingestion)"
+    },
+    {
+      "category": "render_ml",
+      "name": "linucb_online_update",
+      "measured": 0,
+      "target": 0.0,
+      "unit": "clicks",
+      "status": "PASS",
+      "note": "Online model updated weight matrix"
+    },
+    {
+      "category": "render_i18n",
+      "name": "hindi_bundle_p95",
+      "measured": 285.072,
+      "target": 1000.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Hindi regional language dictionary bundle"
+    },
+    {
+      "category": "render_cap",
+      "name": "active_alerts_p95",
+      "measured": 285.067,
+      "target": 1200.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "Active NDMA CAP emergency polygon feed"
+    },
+    {
+      "category": "render_stress",
+      "name": "concurrency_25_p95",
+      "measured": 1316.918,
+      "target": 4000.0,
+      "unit": "ms",
+      "status": "PASS",
+      "note": "25 parallel live HTTPS requests completed (25/25 succeeded)"
+    }
+  ]
+}
