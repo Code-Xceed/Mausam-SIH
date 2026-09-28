@@ -204,8 +204,17 @@ class CapAdapter:
                 logger.warning("[CAP] live poll failed: %s: %s", type(exc).__name__, exc)
 
         # Fixture fallback (and the SEED-mode default) — extend expiry so the
-        # bundled demo alert stays active forever.
-        fixture = Path(__file__).resolve().parents[3] / "mock_fixtures" / "cap_alerts.xml"
+        # bundled demo alert stays active forever. Resolve via repo layout OR
+        # container layout (/srv), matching cap_poller/fixtures discovery.
+        here = Path(__file__).resolve()
+        fixture = next(
+            (
+                base / "mock_fixtures" / "cap_alerts.xml"
+                for base in (here.parents[3], here.parents[2])
+                if (base / "mock_fixtures" / "cap_alerts.xml").exists()
+            ),
+            here.parents[3] / "mock_fixtures" / "cap_alerts.xml",
+        )
         if fixture.exists():
             return parse_cap_xml(fixture.read_text(encoding="utf-8"), expired_policy="extend")
         return []

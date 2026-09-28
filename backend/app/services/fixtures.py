@@ -17,8 +17,20 @@ from app.services.clock import bucketed_now
 
 logger = logging.getLogger(__name__)
 
-# fixtures.py -> services -> app -> backend -> <repo root>/mock_fixtures
-_FIXTURE_DIR = Path(__file__).resolve().parents[3] / "mock_fixtures"
+# Repo layout:  fixtures.py -> services -> app -> backend -> <repo root>/mock_fixtures
+# Container:    /srv/app/services/fixtures.py -> parents[2] == /srv
+#               (Dockerfile COPYs backend/app to /srv/app and the repo-root
+#               mock_fixtures/ to /srv/mock_fixtures)
+def _fixture_dir() -> Path:
+    here = Path(__file__).resolve()
+    for base in (here.parents[3], here.parents[2]):
+        candidate = base / "mock_fixtures"
+        if candidate.exists():
+            return candidate
+    return here.parents[3] / "mock_fixtures"
+
+
+_FIXTURE_DIR = _fixture_dir()
 
 
 def fixture_dir() -> Path:
