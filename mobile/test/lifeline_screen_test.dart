@@ -42,7 +42,7 @@ void main() {
     expect(find.text('EXTREME'), findsOneWidget);
     expect(find.textContaining('SIMULATED DRILL'), findsWidgets);
     expect(find.textContaining('Mumbai coastal belt'), findsOneWidget);
-    expect(find.text('Evacuation corridor — schematic'), findsOneWidget);
+    expect(find.text('NDMA Tactical Evacuation Route • Vector Grid'), findsOneWidget);
   });
 
   testWidgets('lists relief shelters with capacity + distance', (tester) async {

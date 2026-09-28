@@ -90,7 +90,9 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          # JDK 21 required: maplibre_gl 0.27 Android sources compile with
+          # Java 21 ("invalid source release: 21" on JDK 17 — verified locally).
+          java-version: '21'
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
