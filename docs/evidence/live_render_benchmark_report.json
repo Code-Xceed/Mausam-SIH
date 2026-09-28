@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-28T13:21:23Z",
+  "timestamp": "2026-09-28T13:33:18Z",
   "target_url": "https://mausam-nextgen.onrender.com",
   "total_checks": 24,
   "passed": 24,
@@ -8,7 +8,7 @@
     {
       "category": "render_meta",
       "name": "health_p95",
-      "measured": 447.844,
+      "measured": 345.1,
       "target": 1200.0,
       "unit": "ms",
       "status": "PASS",
@@ -17,7 +17,7 @@
     {
       "category": "render_meta",
       "name": "ready_p95",
-      "measured": 264.987,
+      "measured": 271.757,
       "target": 1200.0,
       "unit": "ms",
       "status": "PASS",
@@ -26,7 +26,7 @@
     {
       "category": "render_weather",
       "name": "context_delhi_p95",
-      "measured": 290.489,
+      "measured": 277.949,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -35,7 +35,7 @@
     {
       "category": "render_weather",
       "name": "context_mumbai_p95",
-      "measured": 261.282,
+      "measured": 273.348,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -44,7 +44,7 @@
     {
       "category": "render_weather",
       "name": "context_kochi_p95",
-      "measured": 289.95,
+      "measured": 264.794,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -53,7 +53,7 @@
     {
       "category": "render_weather",
       "name": "context_vidarbha_p95",
-      "measured": 295.254,
+      "measured": 278.102,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -62,7 +62,7 @@
     {
       "category": "render_weather",
       "name": "context_shimla_p95",
-      "measured": 288.705,
+      "measured": 260.144,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -71,7 +71,7 @@
     {
       "category": "render_weather",
       "name": "context_kolkata_p95",
-      "measured": 253.354,
+      "measured": 274.525,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -80,7 +80,7 @@
     {
       "category": "render_weather",
       "name": "context_bengaluru_p95",
-      "measured": 284.609,
+      "measured": 280.031,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -89,7 +89,7 @@
     {
       "category": "render_sdui",
       "name": "sdui_delhi_p95",
-      "measured": 293.755,
+      "measured": 296.884,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -98,7 +98,7 @@
     {
       "category": "render_sdui",
       "name": "sdui_mumbai_p95",
-      "measured": 277.258,
+      "measured": 278.953,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -107,7 +107,7 @@
     {
       "category": "render_sdui",
       "name": "sdui_kochi_p95",
-      "measured": 279.321,
+      "measured": 287.738,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -116,7 +116,7 @@
     {
       "category": "render_sdui",
       "name": "sdui_vidarbha_p95",
-      "measured": 271.13,
+      "measured": 272.476,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -125,7 +125,7 @@
     {
       "category": "render_sdui",
       "name": "sdui_shimla_p95",
-      "measured": 291.496,
+      "measured": 263.98,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -134,7 +134,7 @@
     {
       "category": "render_sdui",
       "name": "sdui_kolkata_p95",
-      "measured": 258.85,
+      "measured": 265.984,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -143,7 +143,7 @@
     {
       "category": "render_sdui",
       "name": "sdui_bengaluru_p95",
-      "measured": 260.801,
+      "measured": 288.056,
       "target": 2500.0,
       "unit": "ms",
       "status": "PASS",
@@ -152,7 +152,7 @@
     {
       "category": "render_sdui",
       "name": "multi_city_fanout_p95",
-      "measured": 283.346,
+      "measured": 293.155,
       "target": 3000.0,
       "unit": "ms",
       "status": "PASS",
@@ -170,7 +170,7 @@
     {
       "category": "render_wire",
       "name": "etag_revalidation_ms",
-      "measured": 295.199,
+      "measured": 266.205,
       "target": 800.0,
       "unit": "ms",
       "status": "PASS",
@@ -179,7 +179,7 @@
     {
       "category": "render_ml",
       "name": "telemetry_ingest_ms",
-      "measured": 258.999,
+      "measured": 278.054,
       "target": 800.0,
       "unit": "ms",
       "status": "PASS",
@@ -197,7 +197,7 @@
     {
       "category": "render_i18n",
       "name": "hindi_bundle_p95",
-      "measured": 285.072,
+      "measured": 254.804,
       "target": 1000.0,
       "unit": "ms",
       "status": "PASS",
@@ -206,7 +206,7 @@
     {
       "category": "render_cap",
       "name": "active_alerts_p95",
-      "measured": 285.067,
+      "measured": 252.493,
       "target": 1200.0,
       "unit": "ms",
       "status": "PASS",
@@ -215,7 +215,7 @@
     {
       "category": "render_stress",
       "name": "concurrency_25_p95",
-      "measured": 1316.918,
+      "measured": 1458.189,
       "target": 4000.0,
       "unit": "ms",
       "status": "PASS",
