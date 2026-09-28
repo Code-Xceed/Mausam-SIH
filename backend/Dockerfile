@@ -24,4 +24,5 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
 
 # Single worker: alert_store + CAP poller are in-memory per process —
 # multiple workers would split-brain the alert state on a single instance.
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+# PORT is injected by most hosts (Render/Railway); 8000 is the local default.
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1"]
