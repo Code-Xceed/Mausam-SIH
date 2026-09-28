@@ -65,8 +65,16 @@ class CapPoller:
     def _fixture_path() -> str | None:
         from pathlib import Path
 
-        p = Path(__file__).resolve().parents[3] / "mock_fixtures" / "cap_alerts.xml"
-        return str(p) if p.exists() else None
+        # Repo layout (dev):   <root>/backend/app/services/cap_poller.py
+        #                      -> parents[3] == repo root
+        # Container layout:    /srv/app/services/cap_poller.py
+        #                      -> parents[2] == /srv (Dockerfile COPY target)
+        here = Path(__file__).resolve()
+        for base in (here.parents[3], here.parents[2]):
+            p = base / "mock_fixtures" / "cap_alerts.xml"
+            if p.exists():
+                return str(p)
+        return None
 
     def _diff_ingest(self, alerts: list[dict]) -> tuple[list[dict], list[str]]:
         """Returns (new_alerts, removed_ids). Injected alerts survive removal."""

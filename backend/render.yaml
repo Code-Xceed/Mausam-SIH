@@ -1,0 +1,22 @@
+# Render blueprint — one-click deploy of the Mausam backend.
+# In Render: New + → Blueprint → pick this repo → Apply.
+# Build context is the repo ROOT (mock_fixtures must be in the image).
+services:
+  - type: web
+    name: mausam-nextgen
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: API_MODE
+        value: HYBRID        # live gov endpoints when reachable, fixture fallback
+      - key: ENVIRONMENT
+        value: prod
+      # No REDIS_URL on the free tier — the Cache layer degrades gracefully.
+      # Optional live feeds (unset = fixture-backed):
+      # - key: CAP_FEED_URL
+      #   sync: false
+      # - key: DATA_GOV_API_KEY
+      #   sync: false
