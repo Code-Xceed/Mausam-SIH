@@ -19,6 +19,7 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterActivity() {
     private val channelName = "mausam/location"
     private val widgetChannelName = "mausam/home_widget"
+    private var pendingPermissionResult: MethodChannel.Result? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -27,6 +28,7 @@ class MainActivity : FlutterActivity() {
                 when (call.method) {
                     "hasCoarsePermission" -> result.success(hasCoarsePermission())
                     "lastCoarseFix" -> result.success(lastCoarseFix())
+                    "requestCoarsePermission" -> requestCoarsePermission(result)
                     else -> result.notImplemented()
                 }
             }
@@ -66,6 +68,33 @@ class MainActivity : FlutterActivity() {
             this, Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
+    /** Fires the OS runtime dialog; resolves via onRequestPermissionsResult. */
+    private fun requestCoarsePermission(result: MethodChannel.Result) {
+        if (hasCoarsePermission()) {
+            result.success(true)
+            return
+        }
+        pendingPermissionResult = result
+        requestPermissions(
+            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+            PERMISSION_REQUEST_CODE,
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != PERMISSION_REQUEST_CODE) return
+        pendingPermissionResult?.success(
+            grantResults.isNotEmpty() &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED
+        )
+        pendingPermissionResult = null
+    }
+
     /**
      * Returns the last known passive/network fix truncated to ~0.05° so the
      * platform side ALSO never hands the Dart layer better-than-coarse data.
@@ -89,5 +118,9 @@ class MainActivity : FlutterActivity() {
             }
         }
         return null
+    }
+
+    companion object {
+        private const val PERMISSION_REQUEST_CODE = 26076
     }
 }

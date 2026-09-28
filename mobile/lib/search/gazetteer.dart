@@ -97,6 +97,24 @@ class Gazetteer {
     return results.take(limit).map((s) => s.town).toList();
   }
 
+  /// Nearest town to a coordinate (squared-distance scan, O(n)). Used to
+  /// label a coarse GPS fix with a human place name ("near Kochi").
+  Town? nearestTown(double lat, double lon) {
+    if (_towns.isEmpty) return null;
+    Town? best;
+    var bestD2 = double.infinity;
+    for (final t in _towns) {
+      final dLat = t.lat - lat;
+      final dLon = (t.lon - lon) * 0.77; // ~cos(20N) longitude correction
+      final d2 = dLat * dLat + dLon * dLon;
+      if (d2 < bestD2) {
+        bestD2 = d2;
+        best = t;
+      }
+    }
+    return best;
+  }
+
   /// Returns match strength >0, or 0 for no match.
   double _matchScore(String q, String name) {
     if (name == q) return 100;

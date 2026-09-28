@@ -21,6 +21,19 @@ class PermissionsHelper {
     }
   }
 
+  /// Asks the user via the OS dialog (first launch / after denial).
+  /// Returns the final grant state once the dialog resolves.
+  static Future<bool> requestCoarseLocation() async {
+    try {
+      return await _channel.invokeMethod<bool>('requestCoarsePermission') ??
+          false;
+    } on MissingPluginException {
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Last coarse fix from the platform (already truncated to 0.05° natively
   /// so the Dart layer never sees better-than-coarse data).
   static Future<(double, double)?> lastCoarseFix() async {

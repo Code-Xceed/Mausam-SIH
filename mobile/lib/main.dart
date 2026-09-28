@@ -26,6 +26,7 @@ import 'state/connectivity_observer.dart';
 import 'state/error_boundary.dart';
 import 'state/lifeline_mode.dart';
 import 'state/persona_store.dart';
+import 'state/permissions.dart';
 import 'storage/hive_manager.dart';
 
 /// Mausam Next-Gen — Phase 3 client: offline-first resilience (debounced
@@ -190,12 +191,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _bootstrap() async {
     // Warm the gazetteer in the background (search ready in <200ms).
-    Gazetteer.instance.load();
+    unawaited(Gazetteer.instance.load());
     _loadLanguage();
 
-    var coords = await widget.store.loadLocation();
-    coords ??= (28.6139, 77.2090);
-    _placeLabel = await widget.store.loadLabel() ?? 'New Delhi';
+    // Locate-first launch (TASK-061): ask for COARSE location on first run,
+    // snap the fix to the nearest gazetteer town, and fall back to the last
+    // saved city when permission/fix is unavailable — never blocks the UI.
+    var coords = await _tryLocate();
+    if (coords == null) {
+      coords = await widget.store.loadLocation() ?? (28.6139, 77.2090);
+      _placeLabel = await widget.store.loadLabel() ?? 'New Delhi';
+    }
     await widget.store.saveLocation(coords.$1, coords.$2);
     if (!mounted) return;
     setState(() {
@@ -236,6 +242,54 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _refresh() => _load();
+
+  /// Coarse fix + nearest-town label. Returns null when permission is
+  /// missing/denied or no fix is available — callers fall back to the saved
+  /// city. Requesting the OS dialog happens at most once per launch.
+  Future<(double, double)?> _tryLocate() async {
+    try {
+      if (!await PermissionsHelper.hasCoarseLocation()) {
+        final granted = await PermissionsHelper.requestCoarseLocation();
+        if (!granted) return null;
+      }
+      final fix = await PermissionsHelper.lastCoarseFix().timeout(
+        const Duration(seconds: 3),
+        onTimeout: () => null,
+      );
+      if (fix == null) return null;
+      // Idempotent + fast (<200 ms); ensures the nearest-town scan has data.
+      await Gazetteer.instance.load();
+      final town = Gazetteer.instance.nearestTown(fix.$1, fix.$2);
+      if (town != null && mounted) {
+        setState(() => _placeLabel = town.name);
+        await widget.store.saveLabel(town.name);
+      }
+      return fix;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Drawer "Locate me": re-run the coarse fix + refresh the feed.
+  Future<void> _locateMe() async {
+    final fix = await _tryLocate();
+    if (!mounted) return;
+    if (fix == null) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Location unavailable — allow location permission or search your city',
+          ),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+    setState(() => _coords = fix);
+    await widget.store.saveLocation(fix.$1, fix.$2);
+    await _load();
+  }
 
   void _openSearch() {
     Navigator.of(context).push(
@@ -372,7 +426,7 @@ class _HomeScreenState extends State<HomeScreen> {
       try {
         final res = await http
             .get(Uri.parse('${_repo.baseUrl}/v1/i18n/strings/$chosen'))
-            .timeout(const Duration(seconds: 4));
+            .timeout(const Duration(seconds: 10));
         if (res.statusCode == 200) {
           bundle = jsonDecode(res.body) as Map<String, dynamic>;
           await _langStore.saveBundle(chosen, bundle!);
@@ -552,6 +606,7 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: _FavoritesDrawer(
         favorites: _favs,
         onDemoDisaster: _stageDemoDisaster,
+        onLocate: _locateMe,
         baseUrl: _repo.baseUrl,
         onServerUrlChanged: (newUrl) async {
           await widget.store.saveServerUrl(newUrl);
@@ -583,18 +638,26 @@ class _HomeScreenState extends State<HomeScreen> {
           if (_conn == ConnState.offline)
             Material(
               color: Theme.of(context).colorScheme.tertiaryContainer,
-              child: const SizedBox(
+              child: SizedBox(
                 width: double.infinity,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.cloud_off_outlined, size: 14),
-                      SizedBox(width: 6),
-                      Text(
-                        'Offline Mode • Bundled IMD Cache Active',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                      const Icon(Icons.cloud_off_outlined, size: 14),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          _payload == null
+                              ? 'Connecting to live backend — cached data shown'
+                              : 'Offline Mode • Bundled IMD Cache Active',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -689,6 +752,7 @@ class _FavoritesDrawer extends StatelessWidget {
   final ValueChanged<FavoriteLocation> onSelect;
   final ValueChanged<FavoriteLocation> onRemove;
   final VoidCallback onDemoDisaster;
+  final VoidCallback onLocate;
   final String baseUrl;
   final ValueChanged<String>? onServerUrlChanged;
 
@@ -697,6 +761,7 @@ class _FavoritesDrawer extends StatelessWidget {
     required this.onSelect,
     required this.onRemove,
     required this.onDemoDisaster,
+    required this.onLocate,
     required this.baseUrl,
     this.onServerUrlChanged,
   });
@@ -833,6 +898,16 @@ class _FavoritesDrawer extends StatelessWidget {
                 ),
               ),
             const Divider(height: 1),
+            ListTile(
+              dense: true,
+              leading: const Icon(Icons.my_location_outlined),
+              title: const Text('Locate me'),
+              subtitle: const Text('Use coarse location (5 km grid)'),
+              onTap: () {
+                Navigator.of(context).pop();
+                onLocate();
+              },
+            ),
             ListTile(
               dense: true,
               leading: const Icon(Icons.dns_outlined),

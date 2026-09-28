@@ -157,7 +157,9 @@ class _MausamMapScreenState extends State<MausamMapScreen> {
     try {
       final res = await _http
           .get(Uri.parse('$_baseUrl$path'))
-          .timeout(const Duration(seconds: 4));
+          // 12 s: serverless hosts (Render free tier) can take ~30 s to wake;
+          // overlays render from cache meanwhile.
+          .timeout(const Duration(seconds: 12));
       if (res.statusCode == 200) {
         final body = utf8.decode(res.bodyBytes);
         await box.put(path, body); // ring-buffer for the blackout demo

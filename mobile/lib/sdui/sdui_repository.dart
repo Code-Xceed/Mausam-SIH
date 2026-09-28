@@ -78,7 +78,10 @@ class SduiRepository {
         if (etag != null) 'If-None-Match': etag,
       };
       final res = await _client.get(uri, headers: headers).timeout(
-            const Duration(seconds: 4),
+            // 12 s: serverless hosts (Render free tier) sleep after ~15 min
+            // idle and can take ~30 s to wake; the cached payload renders
+            // instantly meanwhile, so this only delays revalidation.
+            const Duration(seconds: 12),
           );
 
       if (res.statusCode == 304 && cached != null) {
