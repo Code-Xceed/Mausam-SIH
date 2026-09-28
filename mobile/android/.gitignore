@@ -1,0 +1,7 @@
+# Machine-local / generated Android build artifacts
+.gradle/
+build/
+app/.cxx/
+local.properties
+app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+*.iml

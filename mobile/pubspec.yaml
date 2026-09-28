@@ -27,7 +27,9 @@ dependencies:
   crypto: ^3.0.6
 
   # Maps (official plugin — not the third-party `flutter_map_libre` fork)
-  maplibre_gl: ^0.20.0
+  # >=0.27 required: 0.20 still imports the removed v1 `PluginRegistry.Registrar`
+  # API and cannot compile against Flutter 3.47's Android embedding.
+  maplibre_gl: ^0.27.1
 
   # Vernacular audio ("Suno Mausam")
   flutter_tts: ^4.1.0

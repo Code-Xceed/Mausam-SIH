@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="launch_bg">#0B57D0</color>
+    <!-- Adaptive-icon background layer (matches legacy icon fill). -->
+    <color name="mausam_icon_bg">#0B57D0</color>
 </resources>

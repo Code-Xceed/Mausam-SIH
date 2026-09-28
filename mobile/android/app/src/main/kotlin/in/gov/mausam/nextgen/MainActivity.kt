@@ -1,4 +1,4 @@
-package in.gov.mausam.nextgen
+package `in`.gov.mausam.nextgen
 
 import android.Manifest
 import android.appwidget.AppWidgetManager

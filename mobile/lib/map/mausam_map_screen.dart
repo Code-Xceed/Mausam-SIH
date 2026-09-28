@@ -176,7 +176,8 @@ class _MausamMapScreenState extends State<MausamMapScreen> {
   }
 
   void _applyTapHandlers() {
-    _controller?.onFeatureTapped.add((id, point, latLng) {
+    // maplibre_gl >=0.26 signature: (point, coordinates, id, layerId, annotation).
+    _controller?.onFeatureTapped.add((point, latLng, id, layerId, annotation) {
       // Overlays carry no per-feature metadata across plugin versions, so
       // any tap on the hazard map opens the safety guidance sheet.
       if (!mounted) return;

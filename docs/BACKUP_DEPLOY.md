@@ -14,8 +14,14 @@ flutter build apk --release --split-per-abi --dart-define=BACKEND_URL=http://192
 ```
 
 - R8 minify + resource shrink are already on (`android/app/build.gradle`).
-- Target: **< 18 MB per ABI**. Verify: `ls -lh build/app/outputs/flutter-apk/`.
+- Realistic size: **~26 MB (armv7) / ~31 MB (arm64)** per ABI — the official
+  maplibre_gl plugin's native `libmaplibre.so` (~11 MB) + `libflutter.so` dominate;
+  the original <18 MB target predates the map integration. Verify:
+  `ls -lh build/app/outputs/flutter-apk/`.
 - The `BACKEND_URL` dart-define must point at the laptop's hotspot IP.
+- Local build prerequisites (Windows): JDK 21 (maplibre 0.27 Java sources),
+  Android cmdline-tools + NDK 28.2.13676358 + platforms 34/35/36. A detached
+  launcher is provided: run `mobile\build_apk_release.bat`, monitor `apk_build.log`.
 
 ## 2. Offline host laptop
 

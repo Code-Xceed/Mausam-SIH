@@ -19,7 +19,10 @@ def flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "
 
 android {
     namespace = "in.gov.mausam.nextgen"
-    compileSdk = 34
+    // 36 required by androidx.core 1.18 (pulled in by maplibre_gl/just_audio).
+    compileSdk = 36
+    // Highest version required by plugins (jni, maplibre_gl); backward compatible.
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -33,7 +36,7 @@ android {
     defaultConfig {
         applicationId = "in.gov.mausam.nextgen"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 36
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
