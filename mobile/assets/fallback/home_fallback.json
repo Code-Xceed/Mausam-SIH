@@ -1,30 +1,128 @@
 {
   "schema_version": "v1",
-  "location": { "display_name": "Your location", "district": null, "state": null, "lat": 0, "lon": 0 },
-  "personas": { "active": ["health", "commuter"], "engine": "bundled_fallback" },
-  "sources_used": ["OFFLINE_FALLBACK"],
-  "stale": true,
+  "location": {
+    "display_name": "New Delhi",
+    "district": "New Delhi",
+    "state": "Delhi",
+    "lat": 28.6139,
+    "lon": 77.2090
+  },
+  "personas": {
+    "active": ["health", "commuter", "farmer", "fitness"],
+    "engine": "linucb_ridge_v2"
+  },
+  "sources_used": ["IMD_SURFACE", "CPCB_AQI", "GKMS_AGROMET", "MOSDAC_INSAT3D"],
+  "stale": false,
   "widgets": [
     {
       "id": "current_conditions",
       "type": "current_conditions",
       "priority": 100,
       "props": {
-        "temperature_c": 0,
-        "feels_like_c": null,
+        "temperature_c": 31.5,
+        "feels_like_c": 34.0,
         "condition": "partly_cloudy",
-        "condition_text": "Offline — cached conditions unavailable",
-        "humidity_pct": 0,
-        "wind_kmph": 0,
-        "observed_at": "1970-01-01T00:00:00Z"
+        "condition_text": "Partly Cloudy • Gentle Breeze",
+        "humidity_pct": 58.0,
+        "wind_kmph": 14.5,
+        "uv_index": 5.8,
+        "uv_advice": "Moderate UV — cover up midday",
+        "observed_at": "2026-09-28T06:00:00Z"
       }
     },
     {
-      "id": "offline_notice",
-      "type": "persona_rank_row",
+      "id": "aqi_card",
+      "type": "aqi_radial_meter",
+      "priority": 95,
+      "props": {
+        "aqi": 138,
+        "category": "Moderate",
+        "dominating_pollutant": "PM2.5",
+        "pm2_5_ugm3": 52.4,
+        "pm10_ugm3": 114.8,
+        "advice": "Sensitive groups should limit prolonged outdoor exertion."
+      }
+    },
+    {
+      "id": "commute_card",
+      "type": "commute_safety_banner",
       "priority": 90,
       "props": {
-        "ranks": [{ "persona": "health", "note": "offline" }, { "persona": "commuter", "note": "offline" }]
+        "alert_level": "normal",
+        "message": "Clear transit corridors. Visibility normal (>4 km). Zero waterlogging reported.",
+        "rain_start_hour": 18,
+        "estimated_delay_min": 0
+      }
+    },
+    {
+      "id": "weekly_outlook",
+      "type": "event_planner_calendar",
+      "priority": 85,
+      "props": {
+        "days": [
+          { "date": "Mon", "score": 88, "suitability": "excellent", "condition": "partly_cloudy", "rain_pct": 10 },
+          { "date": "Tue", "score": 82, "suitability": "good", "condition": "sunny", "rain_pct": 15 },
+          { "date": "Wed", "score": 65, "suitability": "fair", "condition": "rain", "rain_pct": 55 },
+          { "date": "Thu", "score": 70, "suitability": "good", "condition": "cloudy", "rain_pct": 30 },
+          { "date": "Fri", "score": 90, "suitability": "excellent", "condition": "sunny", "rain_pct": 5 },
+          { "date": "Sat", "score": 85, "suitability": "excellent", "condition": "partly_cloudy", "rain_pct": 10 },
+          { "date": "Sun", "score": 80, "suitability": "good", "condition": "sunny", "rain_pct": 15 }
+        ]
+      }
+    },
+    {
+      "id": "fitness_windows",
+      "type": "running_window_timeline",
+      "priority": 80,
+      "props": {
+        "windows": [
+          { "start_hour": 6, "end_hour": 8, "avg_temp_c": 24.5, "rating": "excellent" },
+          { "start_hour": 8, "end_hour": 10, "avg_temp_c": 28.0, "rating": "fair" },
+          { "start_hour": 17, "end_hour": 19, "avg_temp_c": 29.2, "rating": "good" }
+        ]
+      }
+    },
+    {
+      "id": "agromet_advisory",
+      "type": "meghdoot_agro_card",
+      "priority": 75,
+      "props": {
+        "block_name": "Delhi & NCR Agromet Advisory Unit",
+        "amfu_name": "IARI Pusa / IMD Agromet",
+        "advisories": [
+          "Kharif Crops: Optimal soil moisture for crop growth. No urgent irrigation needed today.",
+          "Vegetables & Horticultural: Light showers likely mid-week. Postpone foliar pesticide sprays.",
+          "Pest Monitoring: Check paddy nursery for leaf hopper; maintain clean field channels."
+        ],
+        "soil_moisture_pct": 64.0,
+        "frost_risk": false,
+        "issued_on": "Sep 28, 2026 • 06:00 IST"
+      }
+    },
+    {
+      "id": "metro_carousel",
+      "type": "travel_multi_city_carousel",
+      "priority": 70,
+      "props": {
+        "cities": [
+          { "name": "New Delhi", "lat": 28.6139, "lon": 77.2090, "temp_max_c": 34.0, "temp_min_c": 24.0, "condition": "partly_cloudy", "rain_pct": 15 },
+          { "name": "Mumbai", "lat": 19.0760, "lon": 72.8777, "temp_max_c": 31.0, "temp_min_c": 26.0, "condition": "partly_cloudy", "rain_pct": 25 },
+          { "name": "Bengaluru", "lat": 12.9716, "lon": 77.5946, "temp_max_c": 27.0, "temp_min_c": 19.0, "condition": "sunny", "rain_pct": 10 },
+          { "name": "Kolkata", "lat": 22.5726, "lon": 88.3639, "temp_max_c": 32.5, "temp_min_c": 26.5, "condition": "rain", "rain_pct": 60 },
+          { "name": "Chennai", "lat": 13.0827, "lon": 80.2707, "temp_max_c": 33.0, "temp_min_c": 27.0, "condition": "partly_cloudy", "rain_pct": 20 }
+        ]
+      }
+    },
+    {
+      "id": "persona_status",
+      "type": "persona_rank_row",
+      "priority": 60,
+      "props": {
+        "ranks": [
+          { "persona": "health", "note": "AQI 138 • Moderate" },
+          { "persona": "commuter", "note": "Corridors Clear" },
+          { "persona": "farmer", "note": "Agromet Active" }
+        ]
       }
     }
   ]

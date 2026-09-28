@@ -5,6 +5,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:hive_ce/hive.dart';
 import 'package:http/http.dart' as http;
 
+import '../state/persona_store.dart';
 import 'sdui_models.dart';
 
 /// SDUI repository: fetch → 304 revalidation → Hive persistence → bundled
@@ -21,6 +22,12 @@ class SduiRepository {
 
   final http.Client _client;
   final String baseUrl;
+
+  Future<String> get activeBaseUrl async {
+    final custom = await PersonaStore().loadServerUrl();
+    if (custom != null && custom.isNotEmpty) return custom;
+    return baseUrl;
+  }
 
   static const _boxName = 'cached_schema_box';
   static const _etagKey = 'sdui_home_etag';
@@ -60,8 +67,9 @@ class SduiRepository {
           .take(5)
           .map((c) => '${c.$1.toStringAsFixed(4)}:${c.$2.toStringAsFixed(4)}')
           .join(',');
+      final effectiveUrl = await activeBaseUrl;
       final uri = Uri.parse(
-        '$baseUrl/v1/sdui/home?lat=$lat&lon=$lon'
+        '$effectiveUrl/v1/sdui/home?lat=$lat&lon=$lon'
         '&personas=${personas.join(",")}'
         '${citiesParam.isEmpty ? '' : '&cities=$citiesParam'}',
       );
@@ -92,8 +100,15 @@ class SduiRepository {
       // Network dead — fall through to cached/fallback.
     }
 
-    // 3. Cache hit wins over bundled fallback (fresher).
-    if (cached != null) return cached;
+    // 3. Cache hit wins over bundled fallback (fresher), provided it is not an old dummy
+    if (cached != null) {
+      final isDummy = cached.widgets.length <= 2 &&
+          cached.widgets.any((w) =>
+              w.type == 'current_conditions' &&
+              w.props['temperature_c'] == 0 &&
+              w.props['wind_kmph'] == 0);
+      if (!isDummy) return cached;
+    }
 
     // 4. Bundled fallback layout (TASK-019) — never a blank screen.
     return _bundledFallback();

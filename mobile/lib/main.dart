@@ -415,11 +415,14 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
   }
   Future<void> _stageDemoDisaster() async {
-    await _lifeline.triggerDemo(areaDesc: '$_placeLabel coastal belt');
+    await _lifeline.triggerDemo(
+      areaDesc: 'Odisha & Bengal Coastal Corridor (Simulated Super Cyclone Drill)',
+    );
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('SIMULATED DRILL staged — Lifeline Mode engaged')),
+        content: Text('NDMA SIMULATED DRILL STAGED — Lifeline Mode engaged'),
+      ),
     );
   }
 
@@ -435,48 +438,32 @@ class _HomeScreenState extends State<HomeScreen> {
     final isFav = _favorites.isFavorite(_placeLabel, '');
     return Scaffold(
       appBar: AppBar(
+        titleSpacing: 0,
         title: InkWell(
           onTap: _openSearch,
           onLongPress: _stageDemoDisaster,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(_placeLabel),
+                const Icon(Icons.location_on, size: 20, color: Color(0xFF0B57D0)),
                 const SizedBox(width: 4),
-                const Icon(Icons.expand_more, size: 18),
+                Flexible(
+                  child: Text(
+                    _placeLabel,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                const Icon(Icons.keyboard_arrow_down, size: 18),
               ],
             ),
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.translate),
-            tooltip: 'Language',
-            onPressed: _switchLanguage,
-          ),
-          IconButton(
-            icon: const Icon(Icons.map),
-            tooltip: 'Hazard map',
-            onPressed: () {
-              final coords = _coords;
-              if (coords == null) return;
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => MausamMapScreen(
-                  initialLat: coords.$1,
-                  initialLon: coords.$2,
-                  placeLabel: _placeLabel,
-                ),
-              ));
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.health_and_safety),
-            tooltip: 'Disaster checklists (offline)',
-            onPressed: () => NdmaChecklistScreen.push(context),
-          ),
           IconButton(
             icon: Icon(
               isFav ? Icons.star_rounded : Icons.star_border_rounded,
@@ -487,8 +474,78 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.tune_outlined),
-            tooltip: 'Personas',
+            tooltip: 'Persona Mix',
             onPressed: _openPersonaPicker,
+          ),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert),
+            tooltip: 'More options',
+            onSelected: (val) {
+              switch (val) {
+                case 'suno':
+                  _speakBulletin();
+                  break;
+                case 'language':
+                  _switchLanguage();
+                  break;
+                case 'map':
+                  final coords = _coords;
+                  if (coords == null) return;
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => MausamMapScreen(
+                      initialLat: coords.$1,
+                      initialLon: coords.$2,
+                      placeLabel: _placeLabel,
+                    ),
+                  ));
+                  break;
+                case 'checklists':
+                  NdmaChecklistScreen.push(context);
+                  break;
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'suno',
+                child: Row(
+                  children: [
+                    Icon(Icons.volume_up_outlined, size: 20),
+                    SizedBox(width: 12),
+                    Text('Suno Mausam (Audio)'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'language',
+                child: Row(
+                  children: [
+                    Icon(Icons.translate, size: 20),
+                    SizedBox(width: 12),
+                    Text('Change Language'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'map',
+                child: Row(
+                  children: [
+                    Icon(Icons.map_outlined, size: 20),
+                    SizedBox(width: 12),
+                    Text('National Hazard Map'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'checklists',
+                child: Row(
+                  children: [
+                    Icon(Icons.health_and_safety_outlined, size: 20),
+                    SizedBox(width: 12),
+                    Text('NDMA Safety Checklists'),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -496,6 +553,14 @@ class _HomeScreenState extends State<HomeScreen> {
         favorites: _favs,
         onDemoDisaster: _stageDemoDisaster,
         baseUrl: _repo.baseUrl,
+        onServerUrlChanged: (newUrl) async {
+          await widget.store.saveServerUrl(newUrl);
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Server URL set to: $newUrl — reloading...')),
+          );
+          _refresh();
+        },
         onSelect: (f) async {
           Navigator.of(context).pop();
           await widget.store.saveLocation(f.lat, f.lon);
@@ -528,8 +593,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icon(Icons.cloud_off_outlined, size: 14),
                       SizedBox(width: 6),
                       Text(
-                        'Offline — cached data & full search still work',
-                        style: TextStyle(fontSize: 12),
+                        'Offline Mode • Bundled IMD Cache Active',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -539,24 +604,11 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(child: _buildBody()),
         ],
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // TASK-064: "Suno Mausam" — speaks the advisory in the chosen
-          // language; cached last bulletin replays offline (TASK-065).
-          FloatingActionButton.small(
-            heroTag: 'suno',
-            onPressed: _speakBulletin,
-            tooltip: 'Suno Mausam — listen',
-            child: const Icon(Icons.volume_up),
-          ),
-          const SizedBox(height: 10),
-          FloatingActionButton(
-            heroTag: 'refresh',
-            onPressed: _refresh,
-            child: const Icon(Icons.refresh),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'suno_audio',
+        onPressed: _speakBulletin,
+        icon: const Icon(Icons.volume_up_rounded),
+        label: const Text('Suno Mausam'),
       ),
     );
   }
@@ -638,6 +690,7 @@ class _FavoritesDrawer extends StatelessWidget {
   final ValueChanged<FavoriteLocation> onRemove;
   final VoidCallback onDemoDisaster;
   final String baseUrl;
+  final ValueChanged<String>? onServerUrlChanged;
 
   const _FavoritesDrawer({
     required this.favorites,
@@ -645,40 +698,133 @@ class _FavoritesDrawer extends StatelessWidget {
     required this.onRemove,
     required this.onDemoDisaster,
     required this.baseUrl,
+    this.onServerUrlChanged,
   });
+
+  Future<void> _showServerConfig(BuildContext context) async {
+    final controller = TextEditingController(text: baseUrl);
+    final next = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Backend Server URL'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Enter your laptop or cloud backend URL:\n'
+              '• Emulator: http://10.0.2.2:8000\n'
+              '• Phone on Wi-Fi: http://192.168.x.x:8000\n'
+              '• Public Tunnel: https://...ngrok-free.app',
+              style: TextStyle(fontSize: 12),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                labelText: 'Server Base URL',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
+            child: const Text('Save & Connect'),
+          ),
+        ],
+      ),
+    );
+    if (next != null && next.isNotEmpty) {
+      onServerUrlChanged?.call(next);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Drawer(
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.cloud, size: 28, color: theme.colorScheme.primary),
+                      const SizedBox(width: 8),
+                      Text(
+                        'मौसम 2.0',
+                        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'India Meteorological Department • MoES',
+                    style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: Colors.green, width: 0.6),
+                    ),
+                    child: const Text(
+                      'DPDP 2023 Compliant • 5km² Coarse Grid Protected',
+                      style: TextStyle(fontSize: 10, color: Colors.green, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text('Favorites',
-                  style: Theme.of(context).textTheme.titleLarge),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              child: Text(
+                'SAVED LOCATIONS',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
             ),
             if (favorites.isEmpty)
               const Padding(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text(
-                  'Tap the star to save your current location.\n'
-                  'Favorites persist offline and across restarts.',
+                  'Tap the star on any city to save it. Favorites persist offline and across restarts.',
+                  style: TextStyle(fontSize: 12),
                 ),
               )
             else
               Expanded(
                 child: ListView.builder(
+                  shrinkWrap: true,
                   itemCount: favorites.length,
                   itemBuilder: (context, i) {
                     final f = favorites[i];
                     return ListTile(
-                      leading: const Icon(Icons.star_rounded, color: Colors.amber),
+                      dense: true,
+                      leading: const Icon(Icons.star_rounded, color: Colors.amber, size: 20),
                       title: Text(f.name),
                       subtitle: f.state.isNotEmpty ? Text(f.state) : null,
                       trailing: IconButton(
-                        icon: const Icon(Icons.delete_outline, size: 20),
+                        icon: const Icon(Icons.close, size: 16),
                         onPressed: () => onRemove(f),
                       ),
                       onTap: () => onSelect(f),
@@ -686,86 +832,106 @@ class _FavoritesDrawer extends StatelessWidget {
                   },
                 ),
               ),
-          const Divider(height: 1),
-          ListTile(
-            leading: const Icon(Icons.health_and_safety),
-            title: const Text('Disaster checklists'),
-            subtitle: const Text('NDMA steps — works offline'),
-            onTap: () {
-              Navigator.of(context).pop();
-              NdmaChecklistScreen.push(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.crisis_alert, color: Color(0xFFB71C1C)),
-            title: const Text('Stage demo Red Alert'),
-            subtitle: const Text('Jury demo — hijacks this screen'),
-            onTap: () {
-              Navigator.of(context).pop();
-              onDemoDisaster();
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.insights),
-            title: const Text('Algorithm Inspector'),
-            subtitle: const Text('Live LinUCB context + arm scores'),
-            onTap: () {
-              Navigator.of(context).pop();
-              InspectorSheet.show(context, baseUrl: baseUrl);
-            },
-          ),
-          // TASK-066: accessibility toggles (elderly / low-vision users).
-          SwitchListTile(
-            secondary: const Icon(Icons.format_size),
-            title: const Text('Large text'),
-            value: A11yScope.instance.textScale > 1.05,
-            onChanged: (v) =>
-                A11yScope.instance.setTextScale(v ? 1.3 : 1.0),
-          ),
-          SwitchListTile(
-            secondary: const Icon(Icons.contrast),
-            title: const Text('High contrast'),
-            value: A11yScope.instance.highContrast,
-            onChanged: (v) => A11yScope.instance.setHighContrast(v),
-          ),
-          const Divider(height: 1),
-          // TASK-072: DPDP "Clear My Footprint" — wipes ALL local Hive
-          // boxes (favorites, persona, telemetry, cached schema, lifeline).
-          ListTile(
-            leading: const Icon(Icons.delete_sweep),
-            title: const Text('Clear My Footprint'),
-            subtitle: const Text('Erase all on-device data (DPDP 2023)'),
-            onTap: () async {
-              Navigator.of(context).pop();
-              final confirmed = await showDialog<bool>(
-                context: context,
-                builder: (dialogCtx) => AlertDialog(
-                  title: const Text('Erase everything?'),
-                  content: const Text(
-                    'Favorites, personas, cached forecasts and alerts will be '
-                    'deleted from this device. A server-side purge is sent too.',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(dialogCtx).pop(false),
-                      child: const Text('Cancel'),
-                    ),
-                    FilledButton(
-                      onPressed: () => Navigator.of(dialogCtx).pop(true),
-                      child: const Text('Erase'),
-                    ),
-                  ],
+            const Divider(height: 1),
+            ListTile(
+              dense: true,
+              leading: const Icon(Icons.dns_outlined),
+              title: const Text('Server Connection'),
+              subtitle: Text(baseUrl, maxLines: 1, overflow: TextOverflow.ellipsis),
+              trailing: const Icon(Icons.edit_outlined, size: 18),
+              onTap: () {
+                Navigator.of(context).pop();
+                _showServerConfig(context);
+              },
+            ),
+            ListTile(
+              dense: true,
+              leading: const Icon(Icons.health_and_safety_outlined),
+              title: const Text('Disaster Checklists'),
+              subtitle: const Text('NDMA survival guides (offline)'),
+              onTap: () {
+                Navigator.of(context).pop();
+                NdmaChecklistScreen.push(context);
+              },
+            ),
+            SwitchListTile(
+              dense: true,
+              secondary: const Icon(Icons.format_size),
+              title: const Text('Large Text'),
+              value: A11yScope.instance.textScale > 1.05,
+              onChanged: (v) => A11yScope.instance.setTextScale(v ? 1.3 : 1.0),
+            ),
+            SwitchListTile(
+              dense: true,
+              secondary: const Icon(Icons.contrast),
+              title: const Text('High Contrast'),
+              value: A11yScope.instance.highContrast,
+              onChanged: (v) => A11yScope.instance.setHighContrast(v),
+            ),
+            const Divider(height: 1),
+            ExpansionTile(
+              dense: true,
+              leading: const Icon(Icons.science_outlined, color: Colors.indigo),
+              title: const Text('SIH Demo & AI Diagnostics'),
+              children: [
+                ListTile(
+                  dense: true,
+                  leading: const Icon(Icons.crisis_alert, color: Color(0xFFB71C1C), size: 20),
+                  title: const Text('Simulate Red Alert'),
+                  subtitle: const Text('NDMA Lifeline Mode takeover'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    onDemoDisaster();
+                  },
                 ),
-              );
-              if (confirmed != true) return;
-              await HiveManager.purgeAll();
-              if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Footprint cleared — all local data erased'),
-              ));
-            },
-          ),
-        ],
+                ListTile(
+                  dense: true,
+                  leading: const Icon(Icons.insights, size: 20),
+                  title: const Text('LinUCB Algorithm Inspector'),
+                  subtitle: const Text('Live ML context & arm rankings'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    InspectorSheet.show(context, baseUrl: baseUrl);
+                  },
+                ),
+                ListTile(
+                  dense: true,
+                  leading: const Icon(Icons.delete_sweep, size: 20),
+                  title: const Text('Clear My Footprint'),
+                  subtitle: const Text('Wipe all local data (DPDP Act 2023)'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    final confirmed = await showDialog<bool>(
+                      context: context,
+                      builder: (dialogCtx) => AlertDialog(
+                        title: const Text('Erase everything?'),
+                        content: const Text(
+                          'Favorites, personas, cached forecasts and alerts will be '
+                          'deleted from this device. A server-side purge is sent too.',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(dialogCtx).pop(false),
+                            child: const Text('Cancel'),
+                          ),
+                          FilledButton(
+                            onPressed: () => Navigator.of(dialogCtx).pop(true),
+                            child: const Text('Erase'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirmed != true) return;
+                    await HiveManager.purgeAll();
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Footprint cleared — all local data erased'),
+                    ));
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

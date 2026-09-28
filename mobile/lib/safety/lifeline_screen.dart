@@ -254,8 +254,8 @@ class _EvacuationMapCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
-                    'Evacuation corridor — schematic',
-                    style: TextStyle(color: Colors.white, fontSize: 11),
+                    'NDMA Tactical Evacuation Route • Vector Grid',
+                    style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -384,72 +384,107 @@ class _EvacuationPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    _grid(canvas, size);
+    // 1. Sleek tactical background
+    final bgPaint = Paint()
+      ..shader = const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
+      ).createShader(Offset.zero & size);
+    canvas.drawRect(Offset.zero & size, bgPaint);
 
-    // Danger zone: sweeping arc along the coast (bottom-left).
+    // 2. Subtle tactical range rings (5km, 10km radius)
+    _drawTacticalRings(canvas, size);
+
+    // 3. Danger inundation zone with soft gradient fill + boundary
     final dangerPaint = Paint()
-      ..color = danger.withValues(alpha: 0.18)
+      ..shader = LinearGradient(
+        begin: Alignment.bottomLeft,
+        end: Alignment.topRight,
+        colors: [
+          danger.withValues(alpha: 0.35),
+          danger.withValues(alpha: 0.10),
+        ],
+      ).createShader(Offset.zero & size)
       ..style = PaintingStyle.fill;
+
     final zone = Path()
       ..moveTo(0, size.height)
-      ..lineTo(0, size.height * 0.15)
+      ..lineTo(0, size.height * 0.20)
       ..quadraticBezierTo(
-        size.width * 0.55, size.height * 0.10,
-        size.width * 0.72, size.height * 0.62,
+        size.width * 0.50, size.height * 0.12,
+        size.width * 0.70, size.height * 0.60,
       )
       ..quadraticBezierTo(
-        size.width * 0.78, size.height * 0.92,
-        size.width * 0.55, size.height,
+        size.width * 0.80, size.height * 0.90,
+        size.width * 0.50, size.height,
       )
       ..close();
     canvas.drawPath(zone, dangerPaint);
-    canvas.drawPath(
-      zone,
-      Paint()
-        ..color = danger.withValues(alpha: 0.5)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5,
-    );
 
-    // Corridor: main + alternate, arrows along the safe direction.
-    final corridorPaint = Paint()
-      ..color = safe
+    final zoneBorder = Paint()
+      ..color = danger.withValues(alpha: 0.75)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 6
+      ..strokeWidth = 2.0;
+    canvas.drawPath(zone, zoneBorder);
+
+    // 4. Safe evacuation corridors (primary and alternate)
+    final mainGlow = Paint()
+      ..color = safe.withValues(alpha: 0.4)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 10
       ..strokeCap = StrokeCap.round;
     final main = Path()
-      ..moveTo(size.width * 0.16, size.height * 0.88)
-      ..lineTo(size.width * 0.34, size.height * 0.62)
+      ..moveTo(size.width * 0.18, size.height * 0.85)
+      ..lineTo(size.width * 0.34, size.height * 0.60)
       ..lineTo(size.width * 0.42, size.height * 0.30)
-      ..lineTo(size.width * 0.40, size.height * 0.10);
-    canvas.drawPath(main, corridorPaint);
-    final alt = Path()
-      ..moveTo(size.width * 0.62, size.height * 0.86)
-      ..lineTo(size.width * 0.70, size.height * 0.52)
-      ..lineTo(size.width * 0.86, size.height * 0.26);
-    canvas.drawPath(alt, corridorPaint..strokeWidth = 4);
-    _arrows(canvas, main, safe, size);
-    _arrows(canvas, alt, safe, size);
+      ..lineTo(size.width * 0.40, size.height * 0.12);
+    canvas.drawPath(main, mainGlow);
 
-    // You-are-here marker.
-    _dot(canvas, Offset(size.width * 0.16, size.height * 0.88),
-        const Color(0xFF0B57D0), 7);
-    // Shelter markers.
-    _dot(canvas, Offset(size.width * 0.40, size.height * 0.10), safe, 6);
-    _dot(canvas, Offset(size.width * 0.86, size.height * 0.26), safe, 6);
+    final corridorPaint = Paint()
+      ..color = const Color(0xFF4ADE80)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4.5
+      ..strokeCap = StrokeCap.round;
+    canvas.drawPath(main, corridorPaint);
+
+    final alt = Path()
+      ..moveTo(size.width * 0.60, size.height * 0.85)
+      ..lineTo(size.width * 0.70, size.height * 0.50)
+      ..lineTo(size.width * 0.85, size.height * 0.25);
+    canvas.drawPath(alt, corridorPaint..strokeWidth = 3.5);
+
+    _arrows(canvas, main, Colors.white, size);
+    _arrows(canvas, alt, Colors.white, size);
+
+    // 5. You-are-here pulse marker
+    final pulsePaint = Paint()
+      ..color = const Color(0xFF38BDF8).withValues(alpha: 0.35)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(size.width * 0.18, size.height * 0.85), 14, pulsePaint);
+    _dot(canvas, Offset(size.width * 0.18, size.height * 0.85), const Color(0xFF0284C7), 7);
+
+    // 6. Relief shelter markers (S1, S2)
+    _shelterPin(canvas, Offset(size.width * 0.40, size.height * 0.12), 'S1');
+    _shelterPin(canvas, Offset(size.width * 0.85, size.height * 0.25), 'S2');
   }
 
-  void _grid(Canvas canvas, Size size) {
-    final grid = Paint()
-      ..color = Colors.grey.withValues(alpha: 0.25)
-      ..strokeWidth = 0.5;
-    const step = 28.0;
-    for (double x = 0; x < size.width; x += step) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), grid);
-    }
-    for (double y = 0; y < size.height; y += step) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), grid);
-    }
+  void _drawTacticalRings(Canvas canvas, Size size) {
+    final ringPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.08)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+
+    final center = Offset(size.width * 0.18, size.height * 0.85);
+    canvas.drawCircle(center, size.width * 0.35, ringPaint);
+    canvas.drawCircle(center, size.width * 0.65, ringPaint);
+    canvas.drawCircle(center, size.width * 0.95, ringPaint);
+  }
+
+  void _shelterPin(Canvas canvas, Offset pos, String label) {
+    final pinBg = Paint()..color = const Color(0xFF16A34A);
+    canvas.drawCircle(pos, 9, Paint()..color = Colors.white);
+    canvas.drawCircle(pos, 7.5, pinBg);
   }
 
   void _arrows(Canvas canvas, Path path, Color color, Size size) {
