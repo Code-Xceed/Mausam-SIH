@@ -1,6 +1,6 @@
 # Mausam Next-Gen backend dependencies (Phase 0)
-# Compatible with Python 3.11 (containers) and 3.14 (dev machine).
-# Pinned to versions verified working on Python 3.14.7 (2026-09).
+# Pinned for Python 3.12 (CI + containers; numpy 2.5.x needs >=3.12)
+# and verified on Python 3.14 (dev machine).
 
 fastapi==0.141.1
 uvicorn[standard]==0.54.0

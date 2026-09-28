@@ -1,7 +1,8 @@
 # Mausam Next-Gen backend — FastAPI + Uvicorn
-# Build context is the REPO ROOT (see docker-compose.yml), so fixture data
-# at /mock_fixtures is available to the image without duplication.
-FROM python:3.11-slim AS base
+# Python 3.12: numpy 2.5.x requires >=3.12, and CI (setup-python 3.12) verifies
+# these pins on 3.12. Build context is the REPO ROOT (see render.yaml), so
+# fixture data at /mock_fixtures is available to the image without duplication.
+FROM python:3.12-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
