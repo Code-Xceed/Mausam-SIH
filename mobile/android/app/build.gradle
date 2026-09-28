@@ -59,7 +59,11 @@ android {
         abi {
             enable = true
             reset()
-            include "arm64-v8a", "armeabi-v7a"
+            // All three REQUIRED: `flutter build apk --split-per-abi` scans for
+            // an APK per ABI in its own list (arm64-v8a, armeabi-v7a, x86_64)
+            // and fails the build when one is missing. Phones use the arm64 or
+            // armv7 artifact; x86_64 serves emulators.
+            include "arm64-v8a", "armeabi-v7a", "x86_64"
             universalApk = false
         }
     }
